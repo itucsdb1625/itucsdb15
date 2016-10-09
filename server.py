@@ -17,6 +17,9 @@ def home_page():
 def movies_page():
     return render_template('samplecommit.html')
 
+@app.route('/samplecommit2')
+def berkay_page():
+    return render_template('samplecommit2.html')
 
 if __name__ == '__main__':
     VCAP_APP_PORT = os.getenv('VCAP_APP_PORT')
