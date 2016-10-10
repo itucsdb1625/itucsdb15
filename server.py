@@ -21,9 +21,13 @@ def movies_page():
 def berkay_page():
     return render_template('samplecommit2.html')
 
-@app.route('/samplecommit2')
+@app.route('/samplecommit3')
 def efe_page():
     return render_template('samplecommit3.html')
+
+@app.route('/samplecommit4')
+def emre_page():
+    return render_template('samplecommit4.html')
 
 if __name__ == '__main__':
     VCAP_APP_PORT = os.getenv('VCAP_APP_PORT')
