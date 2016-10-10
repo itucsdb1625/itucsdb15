@@ -29,6 +29,10 @@ def efe_page():
 def emre_page():
     return render_template('samplecommit4.html')
 
+@app.route('/samplecommit5')
+def kursat_page():
+    return render_template('samplecommit5.html')
+
 if __name__ == '__main__':
     VCAP_APP_PORT = os.getenv('VCAP_APP_PORT')
     if VCAP_APP_PORT is not None:
