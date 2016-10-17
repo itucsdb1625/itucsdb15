@@ -9,7 +9,34 @@
 </head>
 
 <body>
-	<h2>IT WORKS :)</h2>
+	<h2 name="headertext">Welcome to Twitter Mini :)</h2>
+	<p>Use button below to join us!</p>
+	
+	
+	
+	
+	<form action="action_page.php">
+First name:<br>
+<input type="text" name="firstname">
+<br>
+Last name:<br>
+<input type="text" name="lastname">
+<br><br>
+<button type="button" onclick=testfunction()>Register</button>
+</form>
+
+
+	
+	
 </body>
 
 </html>
+<script>
+
+function testfunction(){
+
+var welcomemessage=document.getElementsByName('firstname')[0].value + " " +document.getElementsByName('lastname')[0].value+ " Has Joined to the Twitter Mini" ;
+document.getElementsByName("headertext")[0].innerHTML=welcomemessage;
+}
+
+</script>
