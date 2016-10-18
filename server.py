@@ -21,9 +21,9 @@ def movies_page():
 def berkay_page():
     return render_template('samplecommit2.html')
 
-@app.route('/samplecommit3')
+@app.route('/tweetsPage')
 def efe_page():
-    return render_template('samplecommit3.html')
+    return render_template('tweetsPage.html')
 
 @app.route('/samplecommit4')
 def emre_page():
@@ -32,6 +32,14 @@ def emre_page():
 @app.route('/samplecommit5')
 def kursat_page():
     return render_template('samplecommit5.html')
+
+@app.route('/tweetsPage/addTweet')
+def add_tweet_page():
+    return render_template('addTweet.html')
+
+@app.route('/tweetsPage/allTweets')
+def all_tweets_page():
+    return render_template('allTweets.html')
 
 if __name__ == '__main__':
     VCAP_APP_PORT = os.getenv('VCAP_APP_PORT')
