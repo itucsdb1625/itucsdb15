@@ -1,15 +1,49 @@
-<!DOCTYPE html>
-<html>
+{% extends "layout.html" %}
+{% block title %}Emre's Page{% endblock %}
+{% block content %}
 
-<head>
+<h2 name="headertext">Settings</h2>
 
-<meta charset="utf-8" />
-	<title>Kursat Yasar's Page</title>
-	<link rel="stylesheet" href="/static/style.css" />
-</head>
+<button class="accordion">General</button>
+	
+<div class="panel">
+  <h3>There is nothing to see</h3>
+</div>
+	<button class="accordion">Password</button>
+<div class="panel">
+  
+</div>
 
-<body>
-	<h2>Hello Flask</h2>
-</body>
+<button class="accordion">Security and Privacy</button>
+<div class="panel">
+  <h3>There is nothing to see</h3>
+</div>
 
-</html>
+<button class="accordion">Language</button>
+<div class="panel">
+  <h3>There is nothing to see</h3>
+</div>
+
+
+<button class="accordion">Language</button>
+<div class="panel">
+  <h3>There is nothing to see</h3>
+</div>
+
+<button class="accordion">Blocking</button>
+<div class="panel">
+  <h3>There is nothing to see</h3>
+</div>
+
+<script>
+var acc = document.getElementsByClassName("accordion");
+var i;
+
+for (i = 0; i < acc.length; i++) {
+    acc[i].onclick = function(){
+        this.classList.toggle("active");
+        this.nextElementSibling.classList.toggle("show");
+  }
+}
+</script>
+{% endblock %}
