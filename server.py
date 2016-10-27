@@ -1,6 +1,6 @@
 import json
 import os
-import ibm_db
+#import ibm_db
 import re
 import psycopg2 as dbapi2
 from flask import Flask
