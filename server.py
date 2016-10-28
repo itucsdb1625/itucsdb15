@@ -29,9 +29,14 @@ def home_page():
 def movies_page():
     return render_template('samplecommit.html')
 
-@app.route('/samplecommit2')
-def berkay_page():
-    return render_template('samplecommit2.html')
+@app.route('/signup')
+def page_signup():
+    return render_template('page_signup.html')
+
+@app.route('/adminuser')
+def page_adminuser():
+    return render_template('page_useradmin.html')
+
 
 @app.route('/tweetsPage')
 def efe_page():

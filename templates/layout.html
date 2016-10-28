@@ -25,7 +25,16 @@
           <ul class="nav navbar-nav">
             <li class="active"><a href="{{ url_for('home_page') }}">Home</a></li>
             <li><a href="{{ url_for('movies_page') }}">Commit Page 1</a></li>
-            <li><a href="{{ url_for('berkay_page') }}">Sign Up Page - Berkay</a></li>
+            
+          
+     		
+     		<li>  <ul><a href="{{ url_for('page_signup') }}">User Sign Up Page - Berkay</a></ul>
+     			  <ul><a href="{{ url_for('page_adminuser') }}">Admin User Panel Page - Berkay</a></ul>
+     		
+     		
+     		</li>
+
+            
             <li><a href="{{ url_for('efe_page') }}">Tweets Page - Efe</a></li>
             <li><a href="{{ url_for('emre_page') }}">My Profile - Emre</a></li>
             <li><a href="{{ url_for('kursat_page') }}">Settings</a></li>
