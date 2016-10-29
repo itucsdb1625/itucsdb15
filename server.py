@@ -31,6 +31,8 @@ def movies_page():
 
 @app.route('/signup')
 def page_signup():
+    
+    
     return render_template('page_signup.html')
 
 @app.route('/adminuser')
@@ -58,6 +60,21 @@ def add_tweet_page():
 def all_tweets_page():
     return render_template('allTweets.html')
 
+@app.route('/count')
+def counter_page():
+    with dbapi2.connect(app.config['dsn']) as connection:
+        cursor = connection.cursor()
+
+        query = "UPDATE COUNTER SET N = N + 1"
+        cursor.execute(query)
+        connection.commit()
+
+        query = "SELECT N FROM COUNTER"
+        cursor.execute(query)
+        count = cursor.fetchone()[0]
+    return "This page was accessed %d times." % count
+
+
 @app.route('/initdb')
 def initialize_database():
     with dbapi2.connect(app.config['dsn']) as connection:
@@ -72,22 +89,38 @@ def initialize_database():
         query = """INSERT INTO COUNTER (N) VALUES (0)"""
         cursor.execute(query)
 
+
+        query = """DROP TABLE IF EXISTS USERS"""
+        cursor.execute(query)
+
+        query = """CREATE TABLE USERS (
+        ID SERIAL PRIMARY KEY,
+        NAME VARCHAR(80),
+        LASTNAME VARCHAR(80),
+        PHONENUMBER VARCHAR(20),
+        PASSWORD VARCHAR(80),
+        GENDER VARCHAR(10)
+          )"""
+        cursor.execute(query)
+        
+
+        query = """INSERT INTO USERS (ID,NAME,LASTNAME,PHONENUMBER,PASSWORD,GENDER) VALUES (6312,'Berkay','Koksal','05385653858','parola123','Male')"""
+        cursor.execute(query)
+        
+        query = """INSERT INTO USERS (ID,NAME,LASTNAME,PHONENUMBER,PASSWORD,GENDER) VALUES (6313,'Efe','Helvaci','05442609613','efeparola','Male')"""
+        cursor.execute(query)
+
+
+
+
+
+
+
+
+
+
         connection.commit()
     return redirect(url_for('home_page'))
-
-@app.route('/count')
-def counter_page():
-    with dbapi2.connect(app.config['dsn']) as connection:
-        cursor = connection.cursor()
-
-        query = "UPDATE COUNTER SET N = N + 1"
-        cursor.execute(query)
-        connection.commit()
-
-        query = "SELECT N FROM COUNTER"
-        cursor.execute(query)
-        count = cursor.fetchone()[0]
-    return "This page was accessed %d times." % count
 
 
 if __name__ == '__main__':
