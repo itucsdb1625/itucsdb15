@@ -45,3 +45,9 @@ div.panel {
 div.panel.show {
     display: block;
 }
+
+img.profilePic {
+    width: 25%;
+    padding-bottom: 50px;
+    padding-top: 50px;
+}
