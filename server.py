@@ -117,14 +117,14 @@ def initialize_database():
 
         query = """CREATE TABLE NOTIFICATIONS (
         ID SERIAL PRIMARY KEY,
-        FROM SERIAL,
+        FROMID SERIAL,
         TWEETID SERIAL,
         TYPE VARCHAR(40), 
         TIME VARCHAR (80) )
         """
         cursor.execute(query)
 
-        query = """INSERT INTO USERS (ID, FROM, TWEETID, TYPE, TIME) VALUES (6312, 6213, 3455, 'LIKE', '30.10.2016, 01:12')"""
+        query = """INSERT INTO NOTIFICATIONS (ID, FROMID, TWEETID, TYPE, TIME) VALUES (6312, 6213, 3455, 'LIKE', '30.10.2016, 01:12')"""
         cursor.execute(query)
 
 
