@@ -35,7 +35,7 @@ def page_signup():
     
     if request.method == 'POST':
        # if request.type['submit'] == 'register':
-            idr = random.randint(1,10000)
+            idr = random.randint(1,1000000)
             eml = request.form['email']
             nm = request.form['firstname']
             lstnm = request.form['lastname']
@@ -67,7 +67,13 @@ def page_signup():
 
 @app.route('/adminuser')
 def page_adminuser():
-    return render_template('page_useradmin.html')
+    
+    with dbapi2.connect(app.config['dsn']) as connection:
+        cursor = connection.cursor()
+        cursor.execute("SELECT * FROM USERS")
+        allusers = cursor.fetchall()
+        connection.commit()
+    return render_template('page_useradmin.html',users = allusers)
 
 
 @app.route('/tweetsPage')
@@ -167,10 +173,10 @@ def initialize_database():
         )"""
         cursor.execute(query)
 
-        query = """INSERT INTO USERS (ID,EMAIL,NAME,LASTNAME,PHONENUMBER,PASSWORD,GENDER) VALUES (6312,'koksalb@itu.edu.tr','Berkay','Koksal','05385653858','parola123','Male')"""
+        query = """INSERT INTO USERS (ID,EMAIL,NAME,LASTNAME,PHONENUMBER,PASSWORD,GENDER) VALUES (631212,'koksalb@itu.edu.tr','Berkay','Koksal','05385653858','parola123','Male')"""
         cursor.execute(query)
         
-        query = """INSERT INTO USERS (ID,EMAIL,NAME,LASTNAME,PHONENUMBER,PASSWORD,GENDER) VALUES (6313,'helvacie@itu.edu.tr','Efe','Helvaci','05442609613','efeparola','Male')"""
+        query = """INSERT INTO USERS (ID,EMAIL,NAME,LASTNAME,PHONENUMBER,PASSWORD,GENDER) VALUES (631378,'helvacie@itu.edu.tr','Efe','Helvaci','05442609613','efeparola','Male')"""
         cursor.execute(query)
 
         query = """INSERT INTO TWEETS (CONTENT) VALUES ('Hello, twitter!')"""

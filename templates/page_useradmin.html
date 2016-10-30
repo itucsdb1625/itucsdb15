@@ -15,6 +15,37 @@
 	<h2 name="headertext">Admin Panel to manage Database</h2>
 	
 	
+	
+	
+	<form>
+	<table border="1px">
+		<tr>
+			<th>ID</th>
+			<th>Email</th>
+			<th>Name</th>
+			<th>Lastname</th>
+			<th>Phone Number</th>
+			<th>Password</th>
+			<th>Gender</th>
+		</tr>
+		{% for user in users %}
+		<tr>
+			<td>{{user[0]}}</td>
+			<td>{{user[1]}}</td>
+			<td>{{user[2]}}</td>
+			<td>{{user[3]}}</td>
+			<td>{{user[4]}}</td>
+			<td>***</td>
+			<td>{{user[6]}}</td>
+		</tr>
+		{% endfor %}
+	</table>
+	
+</form>
+	
+	
+	
+	
 </body>	
 	
 
