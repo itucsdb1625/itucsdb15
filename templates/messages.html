@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+{% block title %}Messages Page{% endblock %}
+{% block content %}
+    <h2>Messages</h2>
+	{% if messages %}
+	<table border="1px" width="500px">
+		<tr>
+			<th>From</th>
+			<th>To</th>
+			<th>Message</th>
+			<th>Time</th>
+		</tr>
+		{% for message in messages %}
+		<tr>
+			<td>{{message[0]}}</td>
+			<td>{{message[1]}}</td>
+			<td>{{message[2]}}</td>
+			<td>{{message[3]}}</td>
+		</tr>
+		{% endfor %}
+	</table>
+    {% else %}
+    <h4>No messages yet</h4>
+    {% endif %}
+    <a href="{{ url_for('new_message_page') }}">Send a new message</a>
+{% endblock %}

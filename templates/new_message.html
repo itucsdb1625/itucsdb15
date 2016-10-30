@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+{% block title %}New Message Page{% endblock %}
+{% block content %}
+    <h2>Communicate with people!</h2>
+    <form action="" method="POST">
+        From: <input type="text" name="from" /><br />
+        To: <input type="text" name="to" /><br />
+        Message: <input type="textarea" name="message" /><br />
+        <button type="submit">Send</button>
+    </form>
+{% endblock %}

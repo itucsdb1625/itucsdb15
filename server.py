@@ -9,6 +9,7 @@ from flask import render_template
 from flask.helpers import url_for
 from flask import Flask, render_template, request
 import random
+from datetime import datetime
 app = Flask(__name__)
 
 
@@ -21,18 +22,41 @@ def get_elephantsql_dsn(vcap_services):
     dsn = """user='{}' password='{}' host='{}' port={}
              dbname='{}'""".format(user, password, host, port, dbname)
     return dsn
-    
+
 @app.route('/')
 def home_page():
     return render_template('home.html')
 
-@app.route('/samplecommit')
-def movies_page():
-    return render_template('samplecommit.html')
+@app.route('/messages')
+def messages_page():
+    with dbapi2.connect(app.config['dsn']) as connection:
+        cursor = connection.cursor()
+        cursor.execute("SELECT * FROM MESSAGES")
+        messages_all = cursor.fetchall()
+        connection.commit()
+    return render_template('messages.html', messages = messages_all)
+
+@app.route('/messages/new', methods = ['POST', 'GET'])
+def new_message_page():
+    if request.method == 'GET':
+        return render_template('new_message.html')
+    else:
+        frm = request.form['from']
+        to = request.form['to']
+        msg = request.form['message']
+        timestamp = datetime.now();
+
+        with dbapi2.connect(app.config['dsn']) as connection:
+            cursor = connection.cursor()
+            query = """INSERT INTO MESSAGES (FROMUSER, TOUSER, MESSAGE, TIMESTAMP) VALUES ('%s', '%s', '%s', %s)""" % (frm, to, msg, 0)
+            cursor.execute(query)
+            connection.commit()
+        return redirect('/messages')
+
 
 @app.route('/signup', methods = ['POST', 'GET'])
 def page_signup():
-    
+
     if request.method == 'POST':
        # if request.type['submit'] == 'register':
             idr = random.randint(1,1000000)
@@ -42,32 +66,32 @@ def page_signup():
             phnm =  request.form['phonenumber']
             pssw = request.form['password']
             gndr = request.form['gender']
-            
+
             with dbapi2.connect(app.config['dsn']) as connection:
                  cursor = connection.cursor()
-                 
+
                  #query = "UPDATE COUNTER SET N = N + 1"
                  #cursor.execute(query)
-                 
+
                  query = """INSERT INTO USERS (ID,EMAIL,NAME,LASTNAME,PHONENUMBER,PASSWORD,GENDER)
                         VALUES
                         (%s,'%s', '%s', '%s', '%s', '%s', '%s')""" % (idr,eml,nm,lstnm,phnm,pssw,gndr)
                  cursor.execute(query)
-                 
-                 
+
+
                  connection.commit()
-                 
+
             return render_template('page_signup.html')
-      
+
     elif request.method == 'GET':
-        
+
         return render_template('page_signup.html')
-    
-  
+
+
 
 @app.route('/adminuser')
 def page_adminuser():
-    
+
     with dbapi2.connect(app.config['dsn']) as connection:
         cursor = connection.cursor()
         cursor.execute("SELECT * FROM USERS")
@@ -95,7 +119,7 @@ def add_tweet_page():
 
         with dbapi2.connect(app.config['dsn']) as connection:
             cursor = connection.cursor()
-        
+
             cursor.execute("""INSERT INTO TWEETS (CONTENT) VALUES (%s)""", [content])
 
             connection.commit()
@@ -111,12 +135,12 @@ def all_tweets_page():
 def get_allTweets():
     with dbapi2.connect(app.config['dsn']) as connection:
         cursor = connection.cursor()
-        
+
         cursor.execute("SELECT * FROM TWEETS")
         tweets = cursor.fetchall()
-        
+
         connection.commit()
-        
+
         return tweets
 
 @app.route('/count')
@@ -148,6 +172,15 @@ def initialize_database():
         query = """INSERT INTO COUNTER (N) VALUES (0)"""
         cursor.execute(query)
 
+        query = """DROP TABLE IF EXISTS MESSAGES"""
+        cursor.execute(query)
+
+        query = """CREATE TABLE MESSAGES (
+        FROMUSER VARCHAR(80),
+        TOUSER VARCHAR(80),
+        MESSAGE TEXT,
+        TIMESTAMP INTEGER)"""
+        cursor.execute(query)
 
         query = """DROP TABLE IF EXISTS USERS"""
         cursor.execute(query)
@@ -175,7 +208,7 @@ def initialize_database():
 
         query = """INSERT INTO USERS (ID,EMAIL,NAME,LASTNAME,PHONENUMBER,PASSWORD,GENDER) VALUES (631212,'koksalb@itu.edu.tr','Berkay','Koksal','05385653858','parola123','Male')"""
         cursor.execute(query)
-        
+
         query = """INSERT INTO USERS (ID,EMAIL,NAME,LASTNAME,PHONENUMBER,PASSWORD,GENDER) VALUES (631378,'helvacie@itu.edu.tr','Efe','Helvaci','05442609613','efeparola','Male')"""
         cursor.execute(query)
 
@@ -189,16 +222,16 @@ def initialize_database():
         ID SERIAL PRIMARY KEY,
         FROMID SERIAL,
         TWEETID SERIAL,
-        TYPE VARCHAR(40), 
+        TYPE VARCHAR(40),
         TIME VARCHAR (80) )
         """
         cursor.execute(query)
 
         query = """INSERT INTO NOTIFICATIONS (ID, FROMID, TWEETID, TYPE, TIME) VALUES (6312, 6213, 3455, 'LIKE', '30.10.2016, 01:12')"""
         cursor.execute(query)
-        
-        
-        
+
+
+
         query = """DROP TABLE IF EXISTS FOLLOWERS"""
         cursor.execute(query)
 
@@ -228,6 +261,6 @@ if __name__ == '__main__':
     else:
         app.config['dsn'] = """user='hknbgryr' password='Yte_gcTO9oEeCFVM7dKv53djw8VnaJwP'
                                host='jumbo.db.elephantsql.com' port=5432 dbname='hknbgryr'"""
-   
+
     app.run(host='0.0.0.0', port=port, debug=debug)
 
