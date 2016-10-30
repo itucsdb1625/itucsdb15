@@ -85,8 +85,6 @@ def kursat_page():
 @app.route('/tweetsPage/addTweet', methods=['GET', 'POST'])
 def add_tweet_page():
     if 'add_tweet' in request.form:
-        print 'Added tweet to database'
-
         content = str(request.form['CONTENT'])
 
         with dbapi2.connect(app.config['dsn']) as connection:
