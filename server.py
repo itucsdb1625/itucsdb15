@@ -7,7 +7,8 @@ from flask import Flask
 from flask import redirect
 from flask import render_template
 from flask.helpers import url_for
-
+from flask import Flask, render_template, request
+import random
 app = Flask(__name__)
 
 
@@ -29,11 +30,40 @@ def home_page():
 def movies_page():
     return render_template('samplecommit.html')
 
-@app.route('/signup')
+@app.route('/signup', methods = ['POST', 'GET'])
 def page_signup():
     
+    if request.method == 'POST':
+       # if request.type['submit'] == 'register':
+            idr = random.randint(1,10000)
+            eml = request.form['email']
+            nm = request.form['firstname']
+            lstnm = request.form['lastname']
+            phnm =  request.form['phonenumber']
+            pssw = request.form['password']
+            gndr = request.form['gender']
+            
+            with dbapi2.connect(app.config['dsn']) as connection:
+                 cursor = connection.cursor()
+                 
+                 #query = "UPDATE COUNTER SET N = N + 1"
+                 #cursor.execute(query)
+                 
+                 query = """INSERT INTO USERS (ID,EMAIL,NAME,LASTNAME,PHONENUMBER,PASSWORD,GENDER)
+                        VALUES
+                        (%s,'%s', '%s', '%s', '%s', '%s', '%s')""" % (idr,eml,nm,lstnm,phnm,pssw,gndr)
+                 cursor.execute(query)
+                 
+                 
+                 connection.commit()
+                 
+            return render_template('page_signup.html')
+      
+    elif request.method == 'GET':
+        
+        return render_template('page_signup.html')
     
-    return render_template('page_signup.html')
+  
 
 @app.route('/adminuser')
 def page_adminuser():
@@ -95,6 +125,7 @@ def initialize_database():
 
         query = """CREATE TABLE USERS (
         ID SERIAL PRIMARY KEY,
+        EMAIL VARCHAR(80),
         NAME VARCHAR(80),
         LASTNAME VARCHAR(80),
         PHONENUMBER VARCHAR(20),
@@ -104,10 +135,10 @@ def initialize_database():
         cursor.execute(query)
         
 
-        query = """INSERT INTO USERS (ID,NAME,LASTNAME,PHONENUMBER,PASSWORD,GENDER) VALUES (6312,'Berkay','Koksal','05385653858','parola123','Male')"""
+        query = """INSERT INTO USERS (ID,EMAIL,NAME,LASTNAME,PHONENUMBER,PASSWORD,GENDER) VALUES (6312,'koksalb@itu.edu.tr','Berkay','Koksal','05385653858','parola123','Male')"""
         cursor.execute(query)
         
-        query = """INSERT INTO USERS (ID,NAME,LASTNAME,PHONENUMBER,PASSWORD,GENDER) VALUES (6313,'Efe','Helvaci','05442609613','efeparola','Male')"""
+        query = """INSERT INTO USERS (ID,EMAIL,NAME,LASTNAME,PHONENUMBER,PASSWORD,GENDER) VALUES (6313,'helvacie@itu.edu.tr','Efe','Helvaci','05442609613','efeparola','Male')"""
         cursor.execute(query)
 
 
