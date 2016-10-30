@@ -6,20 +6,21 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Add a tweet...</title>
+<title>Add tweet page</title>
+<link rel="stylesheet" href="/static/style.css" />
 </head>
+
 <body>
+<br><br><br>
+<a href="/">Return to homepage</a>
 
-<h1>Add a tweet</h1>
+<form action="/tweetsPage/addTweet" method="POST">
+	<font size="4" color="red">Add tweet</font>
 
-Tweet Title:</br>
-<input type="text" name="tweet_title"></br>
-
-Tweet content:<br>
-<input type="text" name="tweet_content"></br>
-
-</br>
-<button type="button" onclick=>Add tweet!</button>
+	<h1> Tweet: </h1>
+	<input type="text" name="CONTENT" >
+	<input type="submit" name="add_tweet" value="Tweet it!" />
+</form>
 
 </body>
 </html>

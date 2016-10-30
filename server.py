@@ -82,13 +82,38 @@ def emre_page():
 def kursat_page():
     return render_template('samplecommit5.html')
 
-@app.route('/tweetsPage/addTweet')
+@app.route('/tweetsPage/addTweet', methods=['GET', 'POST'])
 def add_tweet_page():
+    if 'add_tweet' in request.form:
+        print 'Added tweet to database'
+
+        content = str(request.form['CONTENT'])
+
+        with dbapi2.connect(app.config['dsn']) as connection:
+            cursor = connection.cursor()
+        
+            cursor.execute("""INSERT INTO TWEETS (CONTENT) VALUES (%s)""", [content])
+
+            connection.commit()
+
     return render_template('addTweet.html')
 
 @app.route('/tweetsPage/allTweets')
 def all_tweets_page():
-    return render_template('allTweets.html')
+    allTweets = get_allTweets()
+
+    return render_template('allTweets.html', tweets = allTweets)
+
+def get_allTweets():
+    with dbapi2.connect(app.config['dsn']) as connection:
+        cursor = connection.cursor()
+        
+        cursor.execute("SELECT * FROM TWEETS")
+        tweets = cursor.fetchall()
+        
+        connection.commit()
+        
+        return tweets
 
 @app.route('/count')
 def counter_page():
@@ -133,7 +158,16 @@ def initialize_database():
         GENDER VARCHAR(10)
           )"""
         cursor.execute(query)
-        
+
+        query = """DROP TABLE IF EXISTS TWEETS"""
+        cursor.execute(query)
+
+        query = """CREATE TABLE TWEETS (
+        ID SERIAL NOT NULL,
+        CONTENT VARCHAR(140),
+        PRIMARY KEY(ID)
+        )"""
+        cursor.execute(query)
 
         query = """INSERT INTO USERS (ID,EMAIL,NAME,LASTNAME,PHONENUMBER,PASSWORD,GENDER) VALUES (6312,'koksalb@itu.edu.tr','Berkay','Koksal','05385653858','parola123','Male')"""
         cursor.execute(query)
@@ -141,7 +175,8 @@ def initialize_database():
         query = """INSERT INTO USERS (ID,EMAIL,NAME,LASTNAME,PHONENUMBER,PASSWORD,GENDER) VALUES (6313,'helvacie@itu.edu.tr','Efe','Helvaci','05442609613','efeparola','Male')"""
         cursor.execute(query)
 
-
+        query = """INSERT INTO TWEETS (CONTENT) VALUES ('Hello, twitter!')"""
+        cursor.execute(query)
 
         query = """DROP TABLE IF EXISTS NOTIFICATIONS"""
         cursor.execute(query)
@@ -157,7 +192,6 @@ def initialize_database():
 
         query = """INSERT INTO NOTIFICATIONS (ID, FROMID, TWEETID, TYPE, TIME) VALUES (6312, 6213, 3455, 'LIKE', '30.10.2016, 01:12')"""
         cursor.execute(query)
-
 
         connection.commit()
     return redirect(url_for('home_page'))
