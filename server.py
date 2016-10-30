@@ -192,6 +192,20 @@ def initialize_database():
 
         query = """INSERT INTO NOTIFICATIONS (ID, FROMID, TWEETID, TYPE, TIME) VALUES (6312, 6213, 3455, 'LIKE', '30.10.2016, 01:12')"""
         cursor.execute(query)
+        
+        
+        
+        query = """DROP TABLE IF EXISTS FOLLOWERS"""
+        cursor.execute(query)
+
+        query = """CREATE TABLE FOLLOWERS (
+        ID SERIAL PRIMARY KEY,
+        FRIENDID SERIAL,
+        FOLLOWBACK BOOLEAN)"""
+        cursor.execute(query)
+
+        query = """INSERT INTO FOLLOWERS (ID, FRIENDID,FOLLOWBACK) VALUES (6312, 6213,TRUE)"""
+        cursor.execute(query)
 
         connection.commit()
     return redirect(url_for('home_page'))
