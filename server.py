@@ -89,15 +89,30 @@ def page_signup():
 
 
 
-@app.route('/adminuser')
+@app.route('/adminuser', methods = ['POST', 'GET'])
 def page_adminuser():
+ 
+    with dbapi2.connect(app.config['dsn']) as connection:
+        cursor = connection.cursor() 
+        if request.method == 'GET':    
+            cursor.execute("SELECT * FROM USERS")
+            allusers = cursor.fetchall()
+            connection.commit()
+    return render_template('page_useradmin.html',users = allusers)
 
+@app.route('/adminuser/deleteuser', methods = ['POST', 'GET'])
+def user_delete():
     with dbapi2.connect(app.config['dsn']) as connection:
         cursor = connection.cursor()
-        cursor.execute("SELECT * FROM USERS")
-        allusers = cursor.fetchall()
-        connection.commit()
-    return render_template('page_useradmin.html',users = allusers)
+        if request.method == 'POST':
+            idtodelete = request.form['idtodelete']
+            query = """DELETE FROM USERS WHERE ID=%s""" % (idtodelete)
+            cursor.execute(query)
+          
+            cursor.execute("SELECT * FROM USERS")
+            allusers = cursor.fetchall()
+            connection.commit()
+    return redirect(url_for('page_adminuser',users = allusers))
 
 
 @app.route('/tweetsPage')
