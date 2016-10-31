@@ -181,6 +181,9 @@ def initialize_database():
         MESSAGE TEXT,
         TIMESTAMP INTEGER)"""
         cursor.execute(query)
+        
+        query = """INSERT INTO MESSAGES (FROMUSER, TOUSER, MESSAGE, TIMESTAMP) VALUES ('Biri', 'Birine', 'Merhaba', 0)"""
+        cursor.execute(query)
 
         query = """DROP TABLE IF EXISTS USERS"""
         cursor.execute(query)
