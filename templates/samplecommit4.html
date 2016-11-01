@@ -11,6 +11,7 @@
 	{% if notifications %}
 	<table border="1px" width="500px">
 		<tr>
+			<th>ID</th>
 			<th>From</th>
 			<th>Tweet</th>
 			<th>Type</th>
@@ -19,17 +20,36 @@
 		</tr>
 		{% for notification in notifications %}
 		<tr>
-			<td>{{notification[1]}}</td>
+			<td>{{notification[0]}}</td>
 			<td>{{notification[2]}}</td>
 			<td>{{notification[3]}}</td>
 			<td>{{notification[4]}}</td>
 			<td>{{notification[5]}}</td>
 			<td>{{notification[6]}}</td>
+			<td>{{notification[7]}}</td>
 		</tr>
 		{% endfor %}
 	</table>
     {% else %}
     <h4>No notification yet</h4>
     {% endif %}
+    
+    
+     <form action="{{ url_for('notification_delete') }}" method = "POST">
+        <button type="submit">Delete all notifications</button>
+    </form>
+    
+    </br>
+<form action="{{ url_for('notification_update') }}" method = "POST">
+
+			<th>ID to change notification to seen</th>
+			</br>
+			<td> <input type="text" name="idtoupdate" ></td>
+
+	
+   <input type="submit" name="idtoupdate" onclick=testfunction() value="Changed to seen">
+	
+	
+</form>
 {% endblock %}
 
