@@ -115,6 +115,55 @@ def user_delete():
     return redirect(url_for('page_adminuser',users = allusers))
 
 
+
+@app.route('/adminuser/updateuser', methods = ['POST', 'GET'])
+def page_updateuser():
+    with dbapi2.connect(app.config['dsn']) as connection:
+        cursor = connection.cursor()
+        if request.method == 'POST':
+           
+            idr = request.form['id']
+            eml = request.form['email']
+            nm = request.form['firstname']
+            lstnm = request.form['lastname']
+            phnm =  request.form['phonenumber']
+            pssw = request.form['password']
+            gndr = request.form['gender']
+            
+            
+            query = """UPDATE USERS SET id=%s,email='%s',name='%s',lastname='%s',phonenumber='%s',password='%s',gender='%s'
+            WHERE id=%s;
+            """ % (idr,eml,nm,lstnm,phnm,pssw,gndr,idr)
+            cursor.execute(query)
+            connection.commit()        
+            cursor.execute("SELECT * FROM USERS")
+            allusers = cursor.fetchall()
+            connection.commit()
+            return redirect(url_for('page_adminuser',users = allusers))
+
+        elif request.method == 'GET':
+
+            return render_template('page_updateuser.html')
+
+
+@app.route('/adminuser/selectuser', methods = ['POST', 'GET'])
+def user_select():
+    with dbapi2.connect(app.config['dsn']) as connection:
+        cursor = connection.cursor()
+        if request.method == 'POST':
+            idtoselect = request.form['idtoselect']
+            query = """SELECT * FROM USERS WHERE ID=%s""" % (idtoselect)
+            cursor.execute(query)
+            allusers = cursor.fetchall()
+            connection.commit()
+    return render_template('page_updateuser.html',users = allusers)
+
+
+
+
+    
+
+
 @app.route('/tweetsPage')
 def efe_page():
     return render_template('tweetsPage.html')
