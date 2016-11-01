@@ -6,5 +6,30 @@
 	<img class="profilePic" src="https://camo.githubusercontent.com/3710f56c06ed6afdc6245f142511bb57874991bb/687474703a2f2f7777772e77656264657664657369676e65722e636f6d2f696d672f6d696e69747769747465722e6a7067" alt="Profile Picture">
 	<h3>Emre Kuru</h3>
 	<p>Computer Engineering Student</p>
+	
+	<h4>Notifications</h4>
+	{% if notifications %}
+	<table border="1px" width="500px">
+		<tr>
+			<th>From</th>
+			<th>Tweet</th>
+			<th>Type</th>
+			<th>Time</th>
+			<th>Status</th>
+		</tr>
+		{% for notification in notifications %}
+		<tr>
+			<td>{{notification[1]}}</td>
+			<td>{{notification[2]}}</td>
+			<td>{{notification[3]}}</td>
+			<td>{{notification[4]}}</td>
+			<td>{{notification[5]}}</td>
+			<td>{{notification[6]}}</td>
+		</tr>
+		{% endfor %}
+	</table>
+    {% else %}
+    <h4>No notification yet</h4>
+    {% endif %}
 {% endblock %}
 
