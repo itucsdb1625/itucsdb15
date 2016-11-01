@@ -168,8 +168,32 @@ def profile_page():
         connection.commit()
     return render_template('samplecommit4.html', notifications = notifications_all)
 
-
+@app.route('/myprofile/deletenotification', methods = ['POST', 'GET'])
+def notification_delete():
+    with dbapi2.connect(app.config['dsn']) as connection:
+        cursor = connection.cursor()
+        if request.method == 'POST':
+            query = """DELETE FROM NOTIFICATIONS""" 
+            cursor.execute(query)
+          
+            cursor.execute("SELECT * FROM NOTIFICATIONS")
+            notifications_all = cursor.fetchall()
+            connection.commit()
+    return redirect(url_for('profile_page', notifications = notifications_all))
     
+@app.route('/myprofile/updatenotification', methods = ['POST', 'GET'])
+def notification_update():
+    with dbapi2.connect(app.config['dsn']) as connection:
+        cursor = connection.cursor()
+        if request.method == 'POST':
+            idtoupdate = request.form['idtoupdate']
+            query = """UPDATE NOTIFICATIONS SET STATUS='SEEN' WHERE ID=%s;"""%(idtoupdate)
+            cursor.execute(query)
+         
+            cursor.execute("SELECT * FROM NOTIFICATIONS")
+            notifications_all = cursor.fetchall()
+            connection.commit()
+    return redirect(url_for('profile_page', notifications = notifications_all))
 
 
 @app.route('/tweetsPage')
@@ -293,6 +317,7 @@ def initialize_database():
 
         query = """CREATE TABLE NOTIFICATIONS (
         ID SERIAL PRIMARY KEY,
+        RECEIVERID SERIAL,
         FROMID SERIAL,
         TWEETID SERIAL,
         TYPE VARCHAR(40),
@@ -302,10 +327,14 @@ def initialize_database():
         """
         cursor.execute(query)
 
-        query = """INSERT INTO NOTIFICATIONS (ID, FROMID, TWEETID, TYPE, TIME, STATUS) VALUES (6312, 6213, 3455, 'LIKE', '30.10.2016, 01:12', 'UNSEEN')"""
+        query = """INSERT INTO NOTIFICATIONS (ID, RECEIVERID, FROMID, TWEETID, TYPE, TIME, STATUS) VALUES (1000, 6312, 6213, 3455, 'LIKE', '30.10.2016, 01:12', 'UNSEEN')"""
         cursor.execute(query)
 
-
+        query = """INSERT INTO NOTIFICATIONS (ID, RECEIVERID, FROMID, TWEETID, TYPE, TIME, STATUS) VALUES (1001, 1234, 6213, 3406, 'LIKE', '1.11.2016, 01:03', 'UNSEEN')"""
+        cursor.execute(query)
+        
+        query = """INSERT INTO NOTIFICATIONS (ID, RECEIVERID, FROMID, TWEETID, TYPE, TIME, STATUS) VALUES (1002, 6312, 6213, 3434, 'LIKE', '1.11.2016, 01:04', 'UNSEEN')"""
+        cursor.execute(query)
 
         query = """DROP TABLE IF EXISTS FOLLOWERS"""
         cursor.execute(query)
