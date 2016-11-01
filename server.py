@@ -159,6 +159,14 @@ def user_select():
     return render_template('page_updateuser.html',users = allusers)
 
 
+@app.route('/myprofile')
+def profile_page():
+    with dbapi2.connect(app.config['dsn']) as connection:
+        cursor = connection.cursor()
+        cursor.execute("SELECT * FROM NOTIFICATIONS")
+        notifications_all = cursor.fetchall()
+        connection.commit()
+    return render_template('samplecommit4.html', notifications = notifications_all)
 
 
     
@@ -168,9 +176,7 @@ def user_select():
 def efe_page():
     return render_template('tweetsPage.html')
 
-@app.route('/samplecommit4')
-def emre_page():
-    return render_template('samplecommit4.html')
+
 
 @app.route('/samplecommit5')
 def kursat_page():
