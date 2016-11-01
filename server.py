@@ -290,11 +290,13 @@ def initialize_database():
         FROMID SERIAL,
         TWEETID SERIAL,
         TYPE VARCHAR(40),
-        TIME VARCHAR (80) )
+        TIME VARCHAR (80),
+        STATUS VARCHAR(80)
+         )
         """
         cursor.execute(query)
 
-        query = """INSERT INTO NOTIFICATIONS (ID, FROMID, TWEETID, TYPE, TIME) VALUES (6312, 6213, 3455, 'LIKE', '30.10.2016, 01:12')"""
+        query = """INSERT INTO NOTIFICATIONS (ID, FROMID, TWEETID, TYPE, TIME, STATUS) VALUES (6312, 6213, 3455, 'LIKE', '30.10.2016, 01:12', 'UNSEEN')"""
         cursor.execute(query)
 
 
