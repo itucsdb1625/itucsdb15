@@ -195,7 +195,6 @@ def notification_update():
             connection.commit()
     return redirect(url_for('profile_page', notifications = notifications_all))
 
-
 @app.route('/tweetsPage', methods=['GET', 'POST'])
 def efe_page():
     if 'add_tweet' in request.form:
@@ -217,7 +216,29 @@ def efe_page():
             cursor.execute("""DELETE FROM TWEETS WHERE ID=%s""", option)
 
             connection.commit()
-        
+
+    elif 'update_tweet' in request.form:
+        option = request.form['options']
+
+        with dbapi2.connect(app.config['dsn']) as connection:
+            cursor = connection.cursor()
+
+            cursor.execute("""SELECT * FROM TWEETS WHERE ID=%s""", option)
+            selectedTweets = cursor.fetchall()
+            connection.commit()
+
+            return render_template('update_tweet.html', tweets = selectedTweets)
+
+    elif 'selected_update_tweet' in request.form:
+        tweetID = request.form['id']
+        newContent = request.form['content']
+
+        with dbapi2.connect(app.config['dsn']) as connection:
+            cursor = connection.cursor()
+
+            cursor.execute("""UPDATE TWEETS SET CONTENT=%s WHERE id=%s""", (newContent, tweetID))
+            connection.commit()
+
     allTweets = get_allTweets()
 
     return render_template('tweetsPage.html', tweets = allTweets)
