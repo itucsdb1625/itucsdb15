@@ -173,7 +173,8 @@ def notification_delete():
     with dbapi2.connect(app.config['dsn']) as connection:
         cursor = connection.cursor()
         if request.method == 'POST':
-            query = """DELETE FROM NOTIFICATIONS""" 
+            idtodelete = request.form['idtodelete']
+            query = """DELETE FROM NOTIFICATIONS WHERE ID=%s"""%idtodelete 
             cursor.execute(query)
           
             cursor.execute("SELECT * FROM NOTIFICATIONS")
@@ -187,7 +188,7 @@ def notification_update():
         cursor = connection.cursor()
         if request.method == 'POST':
             idtoupdate = request.form['idtoupdate']
-            query = """UPDATE NOTIFICATIONS SET STATUS='SEEN' WHERE ID=%s;"""%(idtoupdate)
+            query = """UPDATE NOTIFICATIONS SET STATUS='SEEN' WHERE ID=%s;"""%idtoupdate
             cursor.execute(query)
          
             cursor.execute("SELECT * FROM NOTIFICATIONS")
@@ -374,7 +375,7 @@ def initialize_database():
         query = """CREATE TABLE FOLLOWING (
         ID SERIAL PRIMARY KEY,
         FRIENDID SERIAL,
-        FOLLOWING BOOLEAN)"""
+        FOLLOWBACK BOOLEAN)"""
         cursor.execute(query)
 
         query = """INSERT INTO FOLLOWING (ID, FRIENDID,FOLLOWBACK) VALUES (6312, 6213,TRUE)"""
