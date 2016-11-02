@@ -336,6 +336,8 @@ def initialize_database():
         query = """INSERT INTO NOTIFICATIONS (ID, RECEIVERID, FROMID, TWEETID, TYPE, TIME, STATUS) VALUES (1002, 6312, 6213, 3434, 'LIKE', '1.11.2016, 01:04', 'UNSEEN')"""
         cursor.execute(query)
 
+
+
         query = """DROP TABLE IF EXISTS FOLLOWERS"""
         cursor.execute(query)
 
@@ -356,7 +358,7 @@ def initialize_database():
         FOLLOWING BOOLEAN)"""
         cursor.execute(query)
 
-        query = """INSERT INTO FOLLOWING (ID, FRIENDID,FOLLOWBACK) VALUES (6312, 6213,TRUE)"""
+        query = """INSERT INTO FOLLOWING (ID, FRIENDID,FOLLOWING) VALUES (6312, 6213,TRUE)"""
         cursor.execute(query)
 
         connection.commit()
