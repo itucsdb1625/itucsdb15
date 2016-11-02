@@ -15,9 +15,33 @@
 <body>
 	<h2>Page of Efe Helvacı</h2>
 
-	<li><a href="/tweetsPage/allTweets">All Tweets</a></li>
-	</br>
-	<li><a href="/tweetsPage/addTweet">Add a tweet</a></li>
+<form action="/tweetsPage" method="POST">
+	<font size="4" color="red">Add tweet</font>
+
+	<h1> Tweet: </h1>
+	<input type="text" name="CONTENT" >
+	<input type="submit" name="add_tweet" value="Tweet it!" />
+
+	<br><br>
+
+	<table border="1px">
+		<tr>
+			<th></th>
+			<th>ID</th>
+			<th>Content</th>
+		</tr>
+		{% for tweet in tweets %}
+		<tr>
+			<td><input type="radio" name="options" id={{tweet[0]}} value={{tweet[0]}}></input></td>
+			<td>{{tweet[0]}}</td>
+			<td>{{tweet[1]}}</td>
+		</tr>
+		{% endfor %}
+	</table>
+
+	<br>
+	<input type="submit" name="delete_tweet" value="Delete Selected Tweet">
+</form>
 
 </body>
 
