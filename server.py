@@ -222,6 +222,86 @@ def efe_page():
 
     return render_template('tweetsPage.html', tweets = allTweets)
 
+@app.route('/followers', methods=['GET', 'POST'])
+def followers_page():
+    with dbapi2.connect(app.config['dsn']) as connection:
+        cursor = connection.cursor()
+        cursor.execute("""
+        
+        SELECT  USERS.NAME,USERS.LASTNAME 
+        FROM USERS
+        WHERE 631212=USERS.ID """)
+        followed = cursor.fetchall()
+        cursor = connection.cursor()
+        cursor.execute("""
+        
+        SELECT USERS.ID,USERS.NAME,USERS.LASTNAME 
+        FROM FOLLOWERS
+        INNER JOIN USERS
+        ON FOLLOWERS.FRIENDID=USERS.ID """)
+        followers_all = cursor.fetchall()
+        connection.commit()
+    return render_template('followers.html', followers = followers_all,follow=followed)
+
+@app.route('/followers/delete', methods = ['POST', 'GET'])
+def followers_delete():
+    with dbapi2.connect(app.config['dsn']) as connection:
+        cursor = connection.cursor()
+        if request.method == 'POST':
+            idtodelete = request.form['idtodelete']
+            query = """DELETE FROM FOLLOWERS WHERE FRIENDID=%s""" % (idtodelete)
+            cursor.execute(query)
+          
+            cursor.execute("""
+        
+        SELECT  USERS.NAME,USERS.LASTNAME 
+        FROM USERS
+        
+        WHERE 631212=USERS.ID """)
+        followed = cursor.fetchall()
+        cursor = connection.cursor()
+        cursor.execute("""
+        
+        SELECT USERS.ID,USERS.NAME,USERS.LASTNAME 
+        FROM FOLLOWERS
+        INNER JOIN USERS
+        ON FOLLOWERS.FRIENDID=USERS.ID """)
+        followers_all = cursor.fetchall()
+        connection.commit()
+    return redirect(url_for('followers_page', followers = followers_all,follow=followed))
+
+
+@app.route('/followers/insert', methods = ['POST', 'GET'])
+def followers_insert():
+    with dbapi2.connect(app.config['dsn']) as connection:
+        cursor = connection.cursor()
+        if request.method == 'POST':
+            idtoinsert= request.form['idtoinsert']
+            query = """INSERT INTO FOLLOWERS VALUES(631212,%s) """ % (idtoinsert)
+            cursor.execute(query)
+          
+            cursor.execute("""
+        
+        SELECT  USERS.NAME,USERS.LASTNAME 
+        FROM USERS
+        
+        WHERE 631212=USERS.ID """)
+        followed = cursor.fetchall()
+        cursor = connection.cursor()
+        cursor.execute("""
+        
+        SELECT USERS.ID,USERS.NAME,USERS.LASTNAME 
+        FROM FOLLOWERS
+        INNER JOIN USERS
+        ON FOLLOWERS.FRIENDID=USERS.ID """)
+        followers_all = cursor.fetchall()
+        connection.commit()
+    return redirect(url_for('followers_page', followers = followers_all,follow=followed))
+
+@app.route('/following', methods=['GET', 'POST'])
+def following_page():
+    return render_template('following.html')
+
 @app.route('/samplecommit5')
 def kursat_page():
     return render_template('samplecommit5.html')
@@ -308,6 +388,9 @@ def initialize_database():
 
         query = """INSERT INTO USERS (ID,EMAIL,NAME,LASTNAME,PHONENUMBER,PASSWORD,GENDER) VALUES (631378,'helvacie@itu.edu.tr','Efe','Helvaci','05442609613','efeparola','Male')"""
         cursor.execute(query)
+        
+        query = """INSERT INTO USERS (ID,EMAIL,NAME,LASTNAME,PHONENUMBER,PASSWORD,GENDER) VALUES (631375,'yasarku@itu.edu.tr','kursat','yasar','05442609613','efeparola','Male')"""
+        cursor.execute(query)
 
         query = """INSERT INTO TWEETS (CONTENT) VALUES ('Hello, twitter!')"""
         cursor.execute(query)
@@ -342,12 +425,15 @@ def initialize_database():
         cursor.execute(query)
 
         query = """CREATE TABLE FOLLOWERS (
-        ID SERIAL PRIMARY KEY,
-        FRIENDID SERIAL,
-        FOLLOWBACK BOOLEAN)"""
+        ID SERIAL,
+        FRIENDID SERIAL)"""
         cursor.execute(query)
 
-        query = """INSERT INTO FOLLOWERS (ID, FRIENDID,FOLLOWBACK) VALUES (6312, 6213,TRUE)"""
+        query = """INSERT INTO FOLLOWERS (ID, FRIENDID) VALUES (631212, 631378)"""
+        cursor.execute(query)
+        query = """INSERT INTO FOLLOWERS (ID, FRIENDID) VALUES (631212, 631375)"""
+        cursor.execute(query)
+        query = """INSERT INTO FOLLOWERS (ID, FRIENDID) VALUES (6314, 6224)"""
         cursor.execute(query)
         
         query = """DROP TABLE IF EXISTS FOLLOWING"""

@@ -9,6 +9,13 @@ body {
 h1, h2, h3, h4 {
   color: #E9601A;
 }
+li{
+	color:#E9601A;
+}
+li.followwwwww{
+	text-align: right;
+	color: #E9601A;
+}
 
 a {
   color: #6F6F6F;
