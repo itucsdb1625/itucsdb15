@@ -173,28 +173,62 @@ def notification_delete():
     with dbapi2.connect(app.config['dsn']) as connection:
         cursor = connection.cursor()
         if request.method == 'POST':
-            query = """DELETE FROM NOTIFICATIONS""" 
+            idtodelete = request.form['idtodelete']
+            query = """DELETE FROM NOTIFICATIONS WHERE ID=%s"""%idtodelete 
             cursor.execute(query)
           
             cursor.execute("SELECT * FROM NOTIFICATIONS")
             notifications_all = cursor.fetchall()
             connection.commit()
     return redirect(url_for('profile_page', notifications = notifications_all))
+
+@app.route('/myprofile/likenotification', methods = ['POST', 'GET'])
+def notification_like():
+    with dbapi2.connect(app.config['dsn']) as connection:
+        cursor = connection.cursor()
+        if request.method == 'POST':
+            time = datetime.now()
+            idtoinsert = request.form['idtoinsert']
+            query = """INSERT INTO NOTIFICATIONS (ID, RECEIVERID, FROMID, TWEETID, TYPE, TIME, STATUS) VALUES (%s, %s, 6213, 3434, 'LIKE', '%s', 'UNSEEN')"""%(random.randint(1,1000000), idtoinsert, time)
+            cursor.execute(query)
+          
+            cursor.execute("""SELECT * FROM TWEETS""")
+            connection.commit()
+
+    allTweets = get_allTweets()
+
+    return render_template('tweetsPage.html', tweets = allTweets)
     
+    
+@app.route('/myprofile/retweetnotification', methods = ['POST', 'GET'])
+def notification_retweet():
+    with dbapi2.connect(app.config['dsn']) as connection:
+        cursor = connection.cursor()
+        if request.method == 'POST':
+            time = datetime.now()
+            idtoinsert = request.form['idtoinsert']
+            query = """INSERT INTO NOTIFICATIONS (ID, RECEIVERID, FROMID, TWEETID, TYPE, TIME, STATUS) VALUES (%s, %s, 6213, 3434, 'RETWEET', '%s', 'UNSEEN')"""%(random.randint(1,1000000), idtoinsert, time)
+            cursor.execute(query)
+          
+            cursor.execute("""SELECT * FROM TWEETS""")
+            connection.commit()
+
+    allTweets = get_allTweets()
+
+    return render_template('tweetsPage.html', tweets = allTweets)
 @app.route('/myprofile/updatenotification', methods = ['POST', 'GET'])
 def notification_update():
     with dbapi2.connect(app.config['dsn']) as connection:
         cursor = connection.cursor()
         if request.method == 'POST':
             idtoupdate = request.form['idtoupdate']
-            query = """UPDATE NOTIFICATIONS SET STATUS='SEEN' WHERE ID=%s;"""%(idtoupdate)
+            query = """UPDATE NOTIFICATIONS SET STATUS='SEEN' WHERE ID=%s;"""%idtoupdate
             cursor.execute(query)
          
             cursor.execute("SELECT * FROM NOTIFICATIONS")
             notifications_all = cursor.fetchall()
             connection.commit()
     return redirect(url_for('profile_page', notifications = notifications_all))
-
 
 @app.route('/tweetsPage', methods=['GET', 'POST'])
 def efe_page():
@@ -217,7 +251,29 @@ def efe_page():
             cursor.execute("""DELETE FROM TWEETS WHERE ID=%s""", option)
 
             connection.commit()
-        
+
+    elif 'update_tweet' in request.form:
+        option = request.form['options']
+
+        with dbapi2.connect(app.config['dsn']) as connection:
+            cursor = connection.cursor()
+
+            cursor.execute("""SELECT * FROM TWEETS WHERE ID=%s""", option)
+            selectedTweets = cursor.fetchall()
+            connection.commit()
+
+            return render_template('update_tweet.html', tweets = selectedTweets)
+
+    elif 'selected_update_tweet' in request.form:
+        tweetID = request.form['id']
+        newContent = request.form['content']
+
+        with dbapi2.connect(app.config['dsn']) as connection:
+            cursor = connection.cursor()
+
+            cursor.execute("""UPDATE TWEETS SET CONTENT=%s WHERE id=%s""", (newContent, tweetID))
+            connection.commit()
+
     allTweets = get_allTweets()
 
     return render_template('tweetsPage.html', tweets = allTweets)
@@ -404,7 +460,7 @@ def initialize_database():
         FROMID SERIAL,
         TWEETID SERIAL,
         TYPE VARCHAR(40),
-        TIME VARCHAR (80),
+        TIME TEXT,
         STATUS VARCHAR(80)
          )
         """
@@ -441,7 +497,7 @@ def initialize_database():
         query = """CREATE TABLE FOLLOWING (
         ID SERIAL PRIMARY KEY,
         FRIENDID SERIAL,
-        FOLLOWING BOOLEAN)"""
+        FOLLOWBACK BOOLEAN)"""
         cursor.execute(query)
 
         query = """INSERT INTO FOLLOWING (ID, FRIENDID,FOLLOWING) VALUES (6312, 6213,TRUE)"""

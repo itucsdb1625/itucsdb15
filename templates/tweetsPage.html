@@ -35,12 +35,23 @@
 			<td><input type="radio" name="options" id={{tweet[0]}} value={{tweet[0]}}></input></td>
 			<td>{{tweet[0]}}</td>
 			<td>{{tweet[1]}}</td>
+			<td>
+			<form action="{{ url_for('notification_like') }}" method = "POST">			  
+        	<button type="submit" name="idtoinsert" onclick=testfunction() id={{tweet[0]}} value={{tweet[0]}}>Like</button>
+        	</form>    
+    		</td>
+    		<td>
+			<form action="{{ url_for('notification_retweet') }}" method = "POST">			  
+        	<button type="submit" name="idtoinsert" onclick=testfunction() id={{tweet[0]}} value={{tweet[0]}}>Retweet</button>
+        	</form>    
+    		</td>
 		</tr>
 		{% endfor %}
 	</table>
 
 	<br>
-	<input type="submit" name="delete_tweet" value="Delete Selected Tweet">
+	<input type="submit" name="delete_tweet" value="Delete Selected Tweet"><br>
+	<input type="submit" name="update_tweet" value="Update Selected Tweet">
 </form>
 
 </body>

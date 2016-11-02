@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+{% block title %}Tweet Update Page{% endblock %}
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>Update tweet!</title>
+	<link rel="stylesheet" href="/static/style.css" />
+</head>
+
+<body>
+	<h2>Update Tweet</h2>
+
+	<form action="/tweetsPage" method = "POST">
+	<table border="1px">
+		<tr>
+			<th>ID</th>
+			<th>Content</th>
+		</tr>
+
+		{% for tweet in tweets %}
+		<tr>
+			<td><input type="text" name="id" value={{tweet[0]}} readonly="readonly"></td>
+			<td><input type="text" name="content" value={{tweet[1]}} autofocus="" ></td>
+		</tr>
+		{% endfor %}
+		
+		
+	</table>
+	
+   <input type="submit" name="selected_update_tweet" value="Update Tweet!">
+</form>
+
+{% endblock %}
