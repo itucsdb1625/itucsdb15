@@ -181,7 +181,41 @@ def notification_delete():
             notifications_all = cursor.fetchall()
             connection.commit()
     return redirect(url_for('profile_page', notifications = notifications_all))
+
+@app.route('/myprofile/likenotification', methods = ['POST', 'GET'])
+def notification_like():
+    with dbapi2.connect(app.config['dsn']) as connection:
+        cursor = connection.cursor()
+        if request.method == 'POST':
+            time = datetime.now()
+            idtoinsert = request.form['idtoinsert']
+            query = """INSERT INTO NOTIFICATIONS (ID, RECEIVERID, FROMID, TWEETID, TYPE, TIME, STATUS) VALUES (%s, %s, 6213, 3434, 'LIKE', '%s', 'UNSEEN')"""%(random.randint(1,1000000), idtoinsert, time)
+            cursor.execute(query)
+          
+            cursor.execute("""SELECT * FROM TWEETS""")
+            connection.commit()
+
+    allTweets = get_allTweets()
+
+    return render_template('tweetsPage.html', tweets = allTweets)
     
+    
+@app.route('/myprofile/retweetnotification', methods = ['POST', 'GET'])
+def notification_retweet():
+    with dbapi2.connect(app.config['dsn']) as connection:
+        cursor = connection.cursor()
+        if request.method == 'POST':
+            time = datetime.now()
+            idtoinsert = request.form['idtoinsert']
+            query = """INSERT INTO NOTIFICATIONS (ID, RECEIVERID, FROMID, TWEETID, TYPE, TIME, STATUS) VALUES (%s, %s, 6213, 3434, 'RETWEET', '%s', 'UNSEEN')"""%(random.randint(1,1000000), idtoinsert, time)
+            cursor.execute(query)
+          
+            cursor.execute("""SELECT * FROM TWEETS""")
+            connection.commit()
+
+    allTweets = get_allTweets()
+
+    return render_template('tweetsPage.html', tweets = allTweets)
 @app.route('/myprofile/updatenotification', methods = ['POST', 'GET'])
 def notification_update():
     with dbapi2.connect(app.config['dsn']) as connection:
@@ -343,7 +377,7 @@ def initialize_database():
         FROMID SERIAL,
         TWEETID SERIAL,
         TYPE VARCHAR(40),
-        TIME VARCHAR (80),
+        TIME TEXT,
         STATUS VARCHAR(80)
          )
         """
