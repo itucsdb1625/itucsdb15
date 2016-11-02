@@ -196,18 +196,8 @@ def notification_update():
     return redirect(url_for('profile_page', notifications = notifications_all))
 
 
-@app.route('/tweetsPage')
+@app.route('/tweetsPage', methods=['GET', 'POST'])
 def efe_page():
-    return render_template('tweetsPage.html')
-
-
-
-@app.route('/samplecommit5')
-def kursat_page():
-    return render_template('samplecommit5.html')
-
-@app.route('/tweetsPage/addTweet', methods=['GET', 'POST'])
-def add_tweet_page():
     if 'add_tweet' in request.form:
         content = str(request.form['CONTENT'])
 
@@ -218,13 +208,23 @@ def add_tweet_page():
 
             connection.commit()
 
-    return render_template('addTweet.html')
+    elif 'delete_tweet' in request.form:
+        option = request.form['options']
 
-@app.route('/tweetsPage/allTweets')
-def all_tweets_page():
+        with dbapi2.connect(app.config['dsn']) as connection:
+            cursor = connection.cursor()
+
+            cursor.execute("""DELETE FROM TWEETS WHERE ID=%s""", option)
+
+            connection.commit()
+        
     allTweets = get_allTweets()
 
-    return render_template('allTweets.html', tweets = allTweets)
+    return render_template('tweetsPage.html', tweets = allTweets)
+
+@app.route('/samplecommit5')
+def kursat_page():
+    return render_template('samplecommit5.html')
 
 def get_allTweets():
     with dbapi2.connect(app.config['dsn']) as connection:
