@@ -347,6 +347,17 @@ def initialize_database():
 
         query = """INSERT INTO FOLLOWERS (ID, FRIENDID,FOLLOWBACK) VALUES (6312, 6213,TRUE)"""
         cursor.execute(query)
+        
+        query = """DROP TABLE IF EXISTS FOLLOWING"""
+        cursor.execute(query)
+        query = """CREATE TABLE FOLLOWING (
+        ID SERIAL PRIMARY KEY,
+        FRIENDID SERIAL,
+        FOLLOWING BOOLEAN)"""
+        cursor.execute(query)
+
+        query = """INSERT INTO FOLLOWING (ID, FRIENDID,FOLLOWBACK) VALUES (6312, 6213,TRUE)"""
+        cursor.execute(query)
 
         connection.commit()
     return redirect(url_for('home_page'))
