@@ -12,37 +12,29 @@
 	<h4>Notifications</h4>
 	{% if notifications %}
 	
+	{% for notification in notifications %}
 	
-	<table border="1px" width="500px">
-		<tr>
-			<th>From</th>
-			<th>Tweet</th>
-			<th>Type</th>
-			<th>Time</th>
-			<th>Status</th>
-		</tr>
-		{% for notification in notifications %}
-		<tr>
-			<td>{{notification[2]}}</td>
-			<td>{{notification[3]}}</td>
-			<td>{{notification[4]}}</td>
-			<td>{{notification[5]}}</td>
-			<td>{{notification[6]}}</td>
-			<td>{{notification[7]}}</td>
+	<table width="800px">
+	
+			<tr>
 			<td>
-			<form action="{{ url_for('notification_update') }}" method = "POST">
-			<button type="submit" name="idtoupdate" onclick=testfunction() id={{notification[0]}} value={{notification[0]}}>Seen</button>
-			</form>			
+				{{notification[2]}}, {{notification[4]}} your tweet at {{notification[5]}}. This notification is {{notification[6]}}.  			          	
 			</td>
-			<td>
-			<form action="{{ url_for('notification_delete') }}" method = "POST">			  
-        	<button type="submit" name="idtodelete" onclick=testfunction() id={{notification[0]}} value={{notification[0]}}>Delete</button>
-        	</form>    
-    		</td>
-		</tr>
-		{% endfor %}
+			<td style="text-align:right">
+			<form action="{{ url_for('notification_update') }}" method = "POST">
+			<button type="submit" name="idtoupdate" onclick=testfunction() id={{notification[0]}} value={{notification[0]}}>Seen</button> </form>
+			</td>
+			<td style="text-align:right">
+			
+			<form action="{{ url_for('notification_delete') }}" method = "POST">
+			<button type="submit" name="idtodelete" onclick=testfunction() id={{notification[0]}} value={{notification[0]}}>Delete</button>	
+			</form>
+			</td>
+			
+			
+	</tr>
+	{% endfor %}
 	</table>
-	
 	
     {% else %}
     <h4>No notification yet</h4>
