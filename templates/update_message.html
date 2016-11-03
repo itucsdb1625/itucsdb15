@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+{% block title %}Update Message{% endblock %}
+{% block content %}
+    <h2>Update Message</h2>
+    {% for message in messages %}
+    <form action="" method="POST">
+        From: <input type="text" name="from" value="{{message[1]}}" /><br />
+        To: <input type="text" name="to" value="{{message[2]}}" /><br />
+        Message: <input type="textarea" name="message" value="{{message[3]}}" /><br />
+        <button type="submit">Confirm</button>
+    </form>
+    {% endfor %}
+{% endblock %}
