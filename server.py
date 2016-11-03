@@ -190,9 +190,8 @@ def notification_like():
             time = datetime.now()
             time = time.replace(microsecond=0)
             idtoinsert = request.form['idtoinsert']
-            query = """INSERT INTO NOTIFICATIONS (ID, RECEIVERID, FROMID, TWEETID, TYPE, TIME, STATUS) VALUES (%s, %s, 6213, 3434, 'LIKE', '%s', 'UNSEEN')"""%(random.randint(1,1000000), idtoinsert, time)
             cursor.execute(query)
-          
+            query = """INSERT INTO NOTIFICATIONS (ID, RECEIVERID, FROMID, TWEETID, TYPE, TIME, STATUS) VALUES (%s, 6213, 6212, %s, 'LIKE', '%s', 'UNSEEN')"""%(random.randint(1,1000000), idtoinsert, time)
             cursor.execute("""SELECT * FROM TWEETS""")
             connection.commit()
 
@@ -209,7 +208,7 @@ def notification_retweet():
             time = datetime.now()
             time = time.replace(microsecond=0)
             idtoinsert = request.form['idtoinsert']
-            query = """INSERT INTO NOTIFICATIONS (ID, RECEIVERID, FROMID, TWEETID, TYPE, TIME, STATUS) VALUES (%s, %s, 6213, 3434, 'RETWEET', '%s', 'UNSEEN')"""%(random.randint(1,1000000), idtoinsert, time)
+            query = """INSERT INTO NOTIFICATIONS (ID, RECEIVERID, FROMID, TWEETID, TYPE, TIME, STATUS) VALUES (%s, 6213, 6212, %s, 'RETWEET', '%s', 'UNSEEN')"""%(random.randint(1,1000000), idtoinsert, time)
             cursor.execute(query)
           
             cursor.execute("""SELECT * FROM TWEETS""")
