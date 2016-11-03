@@ -206,6 +206,7 @@ def notification_retweet():
         cursor = connection.cursor()
         if request.method == 'POST':
             time = datetime.now()
+            time = time.replace(microsecond=0)
             idtoinsert = request.form['idtoinsert']
             query = """INSERT INTO NOTIFICATIONS (ID, RECEIVERID, FROMID, TWEETID, TYPE, TIME, STATUS) VALUES (%s, %s, 6213, 3434, 'RETWEET', '%s', 'UNSEEN')"""%(random.randint(1,1000000), idtoinsert, time)
             cursor.execute(query)
@@ -465,14 +466,15 @@ def initialize_database():
          )
         """
         cursor.execute(query)
-
-        query = """INSERT INTO NOTIFICATIONS (ID, RECEIVERID, FROMID, TWEETID, TYPE, TIME, STATUS) VALUES (1000, 6312, 6213, 3455, 'LIKE', '30.10.2016, 01:12', 'UNSEEN')"""
+        time = datetime.now()
+        time = time.replace(microsecond=0)
+        query = """INSERT INTO NOTIFICATIONS (ID, RECEIVERID, FROMID, TWEETID, TYPE, TIME, STATUS) VALUES (1000, 6312, 6213, 3455, 'LIKE', '%s', 'UNSEEN')"""%time
         cursor.execute(query)
 
-        query = """INSERT INTO NOTIFICATIONS (ID, RECEIVERID, FROMID, TWEETID, TYPE, TIME, STATUS) VALUES (1001, 1234, 6213, 3406, 'LIKE', '1.11.2016, 01:03', 'UNSEEN')"""
+        query = """INSERT INTO NOTIFICATIONS (ID, RECEIVERID, FROMID, TWEETID, TYPE, TIME, STATUS) VALUES (1001, 1234, 6213, 3406, 'LIKE', '%s', 'UNSEEN')"""%time
         cursor.execute(query)
         
-        query = """INSERT INTO NOTIFICATIONS (ID, RECEIVERID, FROMID, TWEETID, TYPE, TIME, STATUS) VALUES (1002, 6312, 6213, 3434, 'LIKE', '1.11.2016, 01:04', 'UNSEEN')"""
+        query = """INSERT INTO NOTIFICATIONS (ID, RECEIVERID, FROMID, TWEETID, TYPE, TIME, STATUS) VALUES (1002, 6312, 6213, 3434, 'LIKE', '%s', 'UNSEEN')"""%time
         cursor.execute(query)
 
 
@@ -500,7 +502,7 @@ def initialize_database():
         FOLLOWBACK BOOLEAN)"""
         cursor.execute(query)
 
-        query = """INSERT INTO FOLLOWING (ID, FRIENDID,FOLLOWING) VALUES (6312, 6213,TRUE)"""
+        query = """INSERT INTO FOLLOWING (ID, FRIENDID,FOLLOWBACK) VALUES (6312, 6213,TRUE)"""
         cursor.execute(query)
 
         connection.commit()
