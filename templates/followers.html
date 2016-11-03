@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+{% block title %}Kursat's Page{% endblock %}
+{% block content %}
+<h2>followers of {{follow[0]}}  {{follow[1]}}</h2>
+	{% for follower in followers%}	
+
+		
+			<li class="follow">{{follower[0]}}  {{follower[1]}}  {{follower[2]}}</li>
+		
+		
+	{% endfor %}
+	
+	
+	<form action="{{ url_for('followers_delete') }}" method = "POST">
+<br>
+ID to delete: <input type="text" name="idtodelete">
+<input type="submit" name="delete" value="Delete Follower">
+</form>
+
+<form action="{{ url_for('followers_insert') }}" method = "POST">
+<br>
+ID to delete: <input type="text" name="idtoinsert">
+<input type="submit" name="insert" value="Insert Follower">
+</form>
+{% endblock %}
