@@ -163,7 +163,7 @@ def user_select():
 def profile_page():
     with dbapi2.connect(app.config['dsn']) as connection:
         cursor = connection.cursor()
-        cursor.execute("SELECT * FROM NOTIFICATIONS")
+        cursor.execute("SELECT * FROM NOTIFICATIONS ORDER BY TIME DESC")
         notifications_all = cursor.fetchall()
         connection.commit()
     return render_template('samplecommit4.html', notifications = notifications_all)
@@ -177,7 +177,7 @@ def notification_delete():
             query = """DELETE FROM NOTIFICATIONS WHERE ID=%s"""%idtodelete 
             cursor.execute(query)
           
-            cursor.execute("SELECT * FROM NOTIFICATIONS")
+            cursor.execute("SELECT * FROM NOTIFICATIONS ORDER BY TIME DESC")
             notifications_all = cursor.fetchall()
             connection.commit()
     return redirect(url_for('profile_page', notifications = notifications_all))
@@ -188,6 +188,7 @@ def notification_like():
         cursor = connection.cursor()
         if request.method == 'POST':
             time = datetime.now()
+            time = time.replace(microsecond=0)
             idtoinsert = request.form['idtoinsert']
             query = """INSERT INTO NOTIFICATIONS (ID, RECEIVERID, FROMID, TWEETID, TYPE, TIME, STATUS) VALUES (%s, %s, 6213, 3434, 'LIKE', '%s', 'UNSEEN')"""%(random.randint(1,1000000), idtoinsert, time)
             cursor.execute(query)
@@ -226,7 +227,7 @@ def notification_update():
             query = """UPDATE NOTIFICATIONS SET STATUS='SEEN' WHERE ID=%s;"""%idtoupdate
             cursor.execute(query)
          
-            cursor.execute("SELECT * FROM NOTIFICATIONS")
+            cursor.execute("SELECT * FROM NOTIFICATIONS ORDER BY TIME DESC")
             notifications_all = cursor.fetchall()
             connection.commit()
     return redirect(url_for('profile_page', notifications = notifications_all))
