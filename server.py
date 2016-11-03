@@ -53,10 +53,41 @@ def new_message_page():
             connection.commit()
         return redirect('/messages')
 
+@app.route('/messages/update/<int:message_id>', methods = ['POST', 'GET'])
+def update_message_page(message_id):
+    if request.method == 'GET':
+        with dbapi2.connect(app.config['dsn']) as connection:
+            cursor = connection.cursor()
+            query = """SELECT * FROM MESSAGES WHERE ID=%s""" % (message_id)
+            cursor.execute(query)
+            message = cursor.fetchall()
+            connection.commit()
+
+        return render_template('update_message.html', messages = message)
+    else:
+        frm = request.form['from']
+        to = request.form['to']
+        msg = request.form['message']
+        timestamp = datetime.now();
+
+        with dbapi2.connect(app.config['dsn']) as connection:
+            cursor = connection.cursor()
+            query = """UPDATE MESSAGES SET FROMUSER='%s', TOUSER='%s', MESSAGE='%s', TIMESTAMP=%s WHERE ID=%s""" % (frm, to, msg, 0, message_id)
+            cursor.execute(query)
+            connection.commit()
+        return redirect('/messages')
+
+@app.route('/messages/delete/<int:message_id>')
+def delete_message_page(message_id):
+    with dbapi2.connect(app.config['dsn']) as connection:
+        cursor = connection.cursor()
+        query = """DELETE FROM MESSAGES WHERE ID=%s""" % (message_id)
+        cursor.execute(query)
+        connection.commit()
+    return redirect('/messages')
 
 @app.route('/signup', methods = ['POST', 'GET'])
 def page_signup():
-
     if request.method == 'POST':
        # if request.type['submit'] == 'register':
             idr = random.randint(1,1000000)
@@ -91,10 +122,10 @@ def page_signup():
 
 @app.route('/adminuser', methods = ['POST', 'GET'])
 def page_adminuser():
- 
+
     with dbapi2.connect(app.config['dsn']) as connection:
-        cursor = connection.cursor() 
-        if request.method == 'GET':    
+        cursor = connection.cursor()
+        if request.method == 'GET':
             cursor.execute("SELECT * FROM USERS")
             allusers = cursor.fetchall()
             connection.commit()
@@ -108,7 +139,7 @@ def user_delete():
             idtodelete = request.form['idtodelete']
             query = """DELETE FROM USERS WHERE ID=%s""" % (idtodelete)
             cursor.execute(query)
-          
+
             cursor.execute("SELECT * FROM USERS")
             allusers = cursor.fetchall()
             connection.commit()
@@ -121,7 +152,7 @@ def page_updateuser():
     with dbapi2.connect(app.config['dsn']) as connection:
         cursor = connection.cursor()
         if request.method == 'POST':
-           
+
             idr = request.form['id']
             eml = request.form['email']
             nm = request.form['firstname']
@@ -129,13 +160,13 @@ def page_updateuser():
             phnm =  request.form['phonenumber']
             pssw = request.form['password']
             gndr = request.form['gender']
-            
-            
+
+
             query = """UPDATE USERS SET id=%s,email='%s',name='%s',lastname='%s',phonenumber='%s',password='%s',gender='%s'
             WHERE id=%s;
             """ % (idr,eml,nm,lstnm,phnm,pssw,gndr,idr)
             cursor.execute(query)
-            connection.commit()        
+            connection.commit()
             cursor.execute("SELECT * FROM USERS")
             allusers = cursor.fetchall()
             connection.commit()
@@ -174,9 +205,9 @@ def notification_delete():
         cursor = connection.cursor()
         if request.method == 'POST':
             idtodelete = request.form['idtodelete']
-            query = """DELETE FROM NOTIFICATIONS WHERE ID=%s"""%idtodelete 
+            query = """DELETE FROM NOTIFICATIONS WHERE ID=%s"""%idtodelete
             cursor.execute(query)
-          
+
             cursor.execute("SELECT * FROM NOTIFICATIONS ORDER BY TIME DESC")
             notifications_all = cursor.fetchall()
             connection.commit()
@@ -198,8 +229,8 @@ def notification_like():
     allTweets = get_allTweets()
 
     return render_template('tweetsPage.html', tweets = allTweets)
-    
-    
+
+
 @app.route('/myprofile/retweetnotification', methods = ['POST', 'GET'])
 def notification_retweet():
     with dbapi2.connect(app.config['dsn']) as connection:
@@ -210,7 +241,7 @@ def notification_retweet():
             idtoinsert = request.form['idtoinsert']
             query = """INSERT INTO NOTIFICATIONS (ID, RECEIVERID, FROMID, TWEETID, TYPE, TIME, STATUS) VALUES (%s, 6213, 6212, %s, 'RETWEET', '%s', 'UNSEEN')"""%(random.randint(1,1000000), idtoinsert, time)
             cursor.execute(query)
-          
+
             cursor.execute("""SELECT * FROM TWEETS""")
             connection.commit()
 
@@ -225,7 +256,7 @@ def notification_update():
             idtoupdate = request.form['idtoupdate']
             query = """UPDATE NOTIFICATIONS SET STATUS='SEEN' WHERE ID=%s;"""%idtoupdate
             cursor.execute(query)
-         
+
             cursor.execute("SELECT * FROM NOTIFICATIONS ORDER BY TIME DESC")
             notifications_all = cursor.fetchall()
             connection.commit()
@@ -284,15 +315,15 @@ def followers_page():
     with dbapi2.connect(app.config['dsn']) as connection:
         cursor = connection.cursor()
         cursor.execute("""
-        
-        SELECT  USERS.NAME,USERS.LASTNAME 
+
+        SELECT  USERS.NAME,USERS.LASTNAME
         FROM USERS
         WHERE 631212=USERS.ID """)
         followed = cursor.fetchall()
         cursor = connection.cursor()
         cursor.execute("""
-        
-        SELECT USERS.ID,USERS.NAME,USERS.LASTNAME 
+
+        SELECT USERS.ID,USERS.NAME,USERS.LASTNAME
         FROM FOLLOWERS
         INNER JOIN USERS
         ON FOLLOWERS.FRIENDID=USERS.ID """)
@@ -308,18 +339,18 @@ def followers_delete():
             idtodelete = request.form['idtodelete']
             query = """DELETE FROM FOLLOWERS WHERE FRIENDID=%s""" % (idtodelete)
             cursor.execute(query)
-          
+
             cursor.execute("""
-        
-        SELECT  USERS.NAME,USERS.LASTNAME 
+
+        SELECT  USERS.NAME,USERS.LASTNAME
         FROM USERS
-        
+
         WHERE 631212=USERS.ID """)
         followed = cursor.fetchall()
         cursor = connection.cursor()
         cursor.execute("""
-        
-        SELECT USERS.ID,USERS.NAME,USERS.LASTNAME 
+
+        SELECT USERS.ID,USERS.NAME,USERS.LASTNAME
         FROM FOLLOWERS
         INNER JOIN USERS
         ON FOLLOWERS.FRIENDID=USERS.ID """)
@@ -336,18 +367,18 @@ def followers_insert():
             idtoinsert= request.form['idtoinsert']
             query = """INSERT INTO FOLLOWERS VALUES(631212,%s) """ % (idtoinsert)
             cursor.execute(query)
-          
+
             cursor.execute("""
-        
-        SELECT  USERS.NAME,USERS.LASTNAME 
+
+        SELECT  USERS.NAME,USERS.LASTNAME
         FROM USERS
-        
+
         WHERE 631212=USERS.ID """)
         followed = cursor.fetchall()
         cursor = connection.cursor()
         cursor.execute("""
-        
-        SELECT USERS.ID,USERS.NAME,USERS.LASTNAME 
+
+        SELECT USERS.ID,USERS.NAME,USERS.LASTNAME
         FROM FOLLOWERS
         INNER JOIN USERS
         ON FOLLOWERS.FRIENDID=USERS.ID """)
@@ -407,12 +438,13 @@ def initialize_database():
         cursor.execute(query)
 
         query = """CREATE TABLE MESSAGES (
+        ID SERIAL,
         FROMUSER VARCHAR(80),
         TOUSER VARCHAR(80),
         MESSAGE TEXT,
         TIMESTAMP INTEGER)"""
         cursor.execute(query)
-        
+
         query = """INSERT INTO MESSAGES (FROMUSER, TOUSER, MESSAGE, TIMESTAMP) VALUES ('Biri', 'Birine', 'Merhaba', 0)"""
         cursor.execute(query)
 
@@ -445,7 +477,7 @@ def initialize_database():
 
         query = """INSERT INTO USERS (ID,EMAIL,NAME,LASTNAME,PHONENUMBER,PASSWORD,GENDER) VALUES (631378,'helvacie@itu.edu.tr','Efe','Helvaci','05442609613','efeparola','Male')"""
         cursor.execute(query)
-        
+
         query = """INSERT INTO USERS (ID,EMAIL,NAME,LASTNAME,PHONENUMBER,PASSWORD,GENDER) VALUES (631375,'yasarku@itu.edu.tr','kursat','yasar','05442609613','efeparola','Male')"""
         cursor.execute(query)
 
@@ -473,7 +505,7 @@ def initialize_database():
 
         query = """INSERT INTO NOTIFICATIONS (ID, RECEIVERID, FROMID, TWEETID, TYPE, TIME, STATUS) VALUES (1001, 1234, 6213, 3406, 'LIKE', '%s', 'UNSEEN')"""%time
         cursor.execute(query)
-        
+
         query = """INSERT INTO NOTIFICATIONS (ID, RECEIVERID, FROMID, TWEETID, TYPE, TIME, STATUS) VALUES (1002, 6312, 6213, 3434, 'LIKE', '%s', 'UNSEEN')"""%time
         cursor.execute(query)
 
@@ -493,7 +525,7 @@ def initialize_database():
         cursor.execute(query)
         query = """INSERT INTO FOLLOWERS (ID, FRIENDID) VALUES (6314, 6224)"""
         cursor.execute(query)
-        
+
         query = """DROP TABLE IF EXISTS FOLLOWING"""
         cursor.execute(query)
         query = """CREATE TABLE FOLLOWING (

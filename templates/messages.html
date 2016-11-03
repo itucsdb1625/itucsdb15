@@ -5,6 +5,7 @@
 	{% if messages %}
 	<table border="1px" width="500px">
 		<tr>
+            <th>ID</th>
 			<th>From</th>
 			<th>To</th>
 			<th>Message</th>
@@ -16,6 +17,9 @@
 			<td>{{message[1]}}</td>
 			<td>{{message[2]}}</td>
 			<td>{{message[3]}}</td>
+			<td>{{message[4]}}</td>
+			<td><a href="{{ url_for('update_message_page', message_id = message[0]) }}"><span class="glyphicon glyphicon-edit"></span></td>
+			<td><a href="{{ url_for('delete_message_page', message_id = message[0]) }}"><span class="glyphicon glyphicon-remove"></span></td>
 		</tr>
 		{% endfor %}
 	</table>
