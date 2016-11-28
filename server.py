@@ -27,6 +27,12 @@ def get_elephantsql_dsn(vcap_services):
 def home_page():
     return render_template('home.html')
 
+@app.route('/page_login')
+def page_login():
+
+    return render_template('loginpage.html')
+
+
 @app.route('/messages')
 def messages_page():
     with dbapi2.connect(app.config['dsn']) as connection:
