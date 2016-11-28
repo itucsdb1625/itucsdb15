@@ -24,17 +24,21 @@
 
 	<br><br>
 
-	<table border="1px">
+	<table width="1000">
 		<tr>
 			<th></th>
-			<th>ID</th>
-			<th>Content</th>
+			<th>Name</th>
+			<th>Surname</th>
+			<th>Tweet</th>
+			<th>Date</th>
 		</tr>
 		{% for tweet in tweets %}
 		<tr>
-			<td><input type="radio" name="options" id={{tweet[0]}} value={{tweet[0]}}></input></td>
+			<td height="50"><input type="radio" name="options" id={{tweet[4]}} value={{tweet[4]}}></input></td>
 			<td>{{tweet[0]}}</td>
 			<td>{{tweet[1]}}</td>
+			<td width="50%">{{tweet[2]}}</td>
+			<td>{{tweet[3]}}</td>
 			<td>
 			<form action="{{ url_for('notification_like') }}" method = "POST">			  
         	<button type="submit" name="idtoinsert" onclick=testfunction() id={{tweet[0]}} value={{tweet[0]}}>Like</button>

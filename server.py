@@ -276,7 +276,7 @@ def efe_page():
         with dbapi2.connect(app.config['dsn']) as connection:
             cursor = connection.cursor()
 
-            cursor.execute("""INSERT INTO TWEETS (CONTENT) VALUES (%s)""", [content])
+            cursor.execute("""INSERT INTO TWEETS (CONTENT, USER_ID) VALUES (%s, 631378)""", [content])
 
             connection.commit()
 
@@ -404,7 +404,7 @@ def get_allTweets():
     with dbapi2.connect(app.config['dsn']) as connection:
         cursor = connection.cursor()
 
-        cursor.execute("SELECT * FROM TWEETS")
+        cursor.execute("(SELECT NAME, LASTNAME, CONTENT, TWEET_DATE, TWEETS.ID FROM TWEETS JOIN USERS ON (TWEETS.USER_ID = USERS.ID))")
         tweets = cursor.fetchall()
 
         connection.commit()
@@ -454,7 +454,7 @@ def initialize_database():
         query = """INSERT INTO MESSAGES (FROMUSER, TOUSER, MESSAGE, TIMESTAMP) VALUES ('Biri', 'Birine', 'Merhaba', 0)"""
         cursor.execute(query)
 
-        query = """DROP TABLE IF EXISTS USERS"""
+        query = """DROP TABLE IF EXISTS USERS CASCADE"""
         cursor.execute(query)
 
         query = """CREATE TABLE USERS (
@@ -468,13 +468,18 @@ def initialize_database():
           )"""
         cursor.execute(query)
 
-        query = """DROP TABLE IF EXISTS TWEETS"""
+        query = """DROP TABLE IF EXISTS TWEETS CASCADE"""
         cursor.execute(query)
 
         query = """CREATE TABLE TWEETS (
         ID SERIAL NOT NULL,
         CONTENT VARCHAR(140),
-        PRIMARY KEY(ID)
+        USER_ID SERIAL,
+        TWEET_DATE DATE NOT NULL DEFAULT current_date,
+        PRIMARY KEY(ID),
+        FOREIGN KEY(USER_ID) REFERENCES USERS(ID)
+            ON DELETE CASCADE
+            ON UPDATE CASCADE
         )"""
         cursor.execute(query)
 
@@ -487,7 +492,7 @@ def initialize_database():
         query = """INSERT INTO USERS (ID,EMAIL,NAME,LASTNAME,PHONENUMBER,PASSWORD,GENDER) VALUES (631375,'yasarku@itu.edu.tr','kursat','yasar','05442609613','efeparola','Male')"""
         cursor.execute(query)
 
-        query = """INSERT INTO TWEETS (CONTENT) VALUES ('Hello, twitter!')"""
+        query = """INSERT INTO TWEETS (CONTENT, USER_ID) VALUES ('Hello, twitter!', 631378)"""
         cursor.execute(query)
 
         query = """DROP TABLE IF EXISTS NOTIFICATIONS"""
@@ -514,7 +519,6 @@ def initialize_database():
 
         query = """INSERT INTO NOTIFICATIONS (ID, RECEIVERID, FROMID, TWEETID, TYPE, TIME, STATUS) VALUES (1002, 6312, 6213, 3434, 'LIKE', '%s', 'UNSEEN')"""%time
         cursor.execute(query)
-
 
 
         query = """DROP TABLE IF EXISTS FOLLOWERS"""
