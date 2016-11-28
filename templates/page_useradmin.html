@@ -13,13 +13,10 @@
 
 <body>
 	<h2 name="headertext">Admin Panel to manage Database</h2>
-	
-	
-	
-	
 	<form>
 	<table border="1px">
 		<tr>
+			
 			<th>ID</th>
 			<th>Email</th>
 			<th>Name</th>
@@ -29,7 +26,10 @@
 			<th>Gender</th>
 		</tr>
 		{% for user in users %}
+		
 		<tr>
+			
+			
 			<td>{{user[0]}}</td>
 			<td>{{user[1]}}</td>
 			<td>{{user[2]}}</td>
@@ -37,25 +37,33 @@
 			<td>{{user[4]}}</td>
 			<td>***</td>
 			<td>{{user[6]}}</td>
+			
+			<form action="{{ url_for('user_select') }}" method = "POST">
+			<td>	
+			<button type="submit" name="idtoselect" id={{user[0]}} value={{user[0]}}>Update</button>
+			</td>
+			</form>
+			<td>	
+			<form action="{{ url_for('user_delete') }}" method = "POST">
+			<button type="submit" name="idtodelete" id={{user[0]}} value={{user[0]}}>Delete</button>
+			</form>
+			</td>
+</td>
+			
 		</tr>
+		
+		</form>
 		{% endfor %}
+		
 	</table>
 	
 </form>
 
 
-<form action="{{ url_for('user_delete') }}" method = "POST">
+
+
 <br>
-ID to delete: <input type="text" name="idtodelete">
-<input type="submit" name="deleteuser" value="Delete User">
-</form>
 
-
-<form action="{{ url_for('user_select') }}" method = "POST">
-
-ID to  select:<input type="text" name="idtoselect">   <input type="submit" name="selectuser" value="Select User to Update">
-<br>
-</form>
 
 
 
@@ -68,7 +76,6 @@ ID to  select:<input type="text" name="idtoselect">   <input type="submit" name=
 
 <script>
 
-function testfunction(){
 
 
 </script>
