@@ -10,6 +10,7 @@ from flask.helpers import url_for
 from flask import Flask, render_template, request
 import random
 from datetime import datetime
+from _overlapped import NULL
 app = Flask(__name__)
 
 
@@ -23,15 +24,29 @@ def get_elephantsql_dsn(vcap_services):
              dbname='{}'""".format(user, password, host, port, dbname)
     return dsn
 
-@app.route('/')
+@app.route('/page_login')
 def home_page():
     return render_template('home.html')
 
-@app.route('/page_login')
+@app.route('/', methods = ['POST', 'GET'])
 def page_login():
-
-    return render_template('loginpage.html')
-
+    with dbapi2.connect(app.config['dsn']) as connection:
+        cursor = connection.cursor()
+        if request.method == 'POST':
+            mailentered = request.form['usermail']
+            passentered = request.form['userpass']
+            query = """SELECT * FROM USERS WHERE email='%s' AND password='%s' """ % (mailentered, passentered)
+            cursor.execute(query)
+            allusers = cursor.fetchall()
+            connection.commit()
+            rowcounter = cursor.rowcount
+            if rowcounter > 0:
+                return render_template('page_profile_temp.html',users = allusers)
+            else:
+                 return render_template('loginpage.html')
+        elif request.method == 'GET':
+            return render_template('loginpage.html')
+    
 
 @app.route('/messages')
 def messages_page():
@@ -204,6 +219,11 @@ def profile_page():
         notifications_all = cursor.fetchall()
         connection.commit()
     return render_template('samplecommit4.html', notifications = notifications_all)
+
+
+
+
+
 
 @app.route('/myprofile/deletenotification', methods = ['POST', 'GET'])
 def notification_delete():
@@ -459,7 +479,7 @@ def initialize_database():
 
         query = """CREATE TABLE USERS (
         ID SERIAL PRIMARY KEY,
-        EMAIL VARCHAR(80),
+        EMAIL VARCHAR(80) UNIQUE,
         NAME VARCHAR(80),
         LASTNAME VARCHAR(80),
         PHONENUMBER VARCHAR(20),

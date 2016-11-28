@@ -1,0 +1,51 @@
+{% extends "layout.html" %}
+{% block title %}Profile Page{% endblock %}
+{% block content %}
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+	<title>Sample Commit Page</title>
+	<link rel="stylesheet" href="/static/style.css" />
+</head>
+
+<body>
+	<h2 name="headertext">Your Profile Page:</h2>
+	
+	
+	{% for user in users %}
+	
+	<div class="container">
+  <h2>You:</h2>
+    <label><b>E-Mail</b>  {{user[1]}}  </label><br>
+    <label><b>Name</b> {{user[2]}}  </label>
+    <label><b>   </b>   {{user[3]}}</label><br>
+    
+
+  </div>
+	
+	TODO: Tweets and Followers Will Come here.
+	TODO: Profile Page will be fixed.
+	
+		{% endfor %}
+		
+</body>	
+	
+
+<script>
+
+document.getElementsByName('id')[0].disabled=true
+
+
+
+function testfunction(){
+
+document.getElementsByName('id')[0].disabled=false
+}
+
+</script>
+	
+	
+{% endblock %}
