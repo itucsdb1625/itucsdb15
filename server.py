@@ -561,7 +561,7 @@ def initialize_database():
         cursor.execute(query)
         query = """INSERT INTO FOLLOWERS (ID, FRIENDID) VALUES (631212, 631375)"""
         cursor.execute(query)
-        query = """INSERT INTO FOLLOWERS (ID, FRIENDID) VALUES (6314, 6224)"""
+        query = """INSERT INTO FOLLOWERS (ID, FRIENDID) VALUES (631212, 6224)"""
         cursor.execute(query)
 
         query = """DROP TABLE IF EXISTS FOLLOWING"""
@@ -577,7 +577,7 @@ def initialize_database():
             """
         cursor.execute(query)
 
-        query = """INSERT INTO FOLLOWING (ID, FRIENDID,FOLLOWBACK) VALUES (6312, 6213,TRUE)"""
+        query = """INSERT INTO FOLLOWING (ID, FRIENDID,FOLLOWBACK) VALUES (631212, 6213,TRUE)"""
         cursor.execute(query)
 
         connection.commit()
