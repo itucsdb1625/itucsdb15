@@ -14,10 +14,10 @@
 		{% for message in messages %}
 		<tr>
 			<td>{{message[0]}}</td>
-			<td>{{message[1]}}</td>
-			<td>{{message[2]}}</td>
-			<td>{{message[3]}}</td>
-			<td>{{message[4]}}</td>
+			<td>{{message[1]}} {{message[2]}}</td>
+			<td>{{message[3]}} {{message[4]}}</td>
+			<td>{{message[5]}}</td>
+			<td>{{message[6]}}</td>
 			<td><a href="{{ url_for('update_message_page', message_id = message[0]) }}"><span class="glyphicon glyphicon-edit"></span></td>
 			<td><a href="{{ url_for('delete_message_page', message_id = message[0]) }}"><span class="glyphicon glyphicon-remove"></span></td>
 		</tr>
