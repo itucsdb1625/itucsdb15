@@ -220,7 +220,7 @@ def user_select():
 def profile_page():
     with dbapi2.connect(app.config['dsn']) as connection:
         cursor = connection.cursor()
-        cursor.execute("SELECT * FROM NOTIFICATIONS ORDER BY TIME DESC")
+        cursor.execute("SELECT USERS.NAME, USERS.LASTNAME, TYPE, TIME, STATUS, NOTIFICATIONS.ID FROM NOTIFICATIONS,USERS WHERE (FROMID = USERS.ID)")
         notifications_all = cursor.fetchall()
         connection.commit()
     return render_template('samplecommit4.html', notifications = notifications_all)
@@ -239,7 +239,7 @@ def notification_delete():
             query = """DELETE FROM NOTIFICATIONS WHERE ID=%s"""%idtodelete
             cursor.execute(query)
 
-            cursor.execute("SELECT * FROM NOTIFICATIONS ORDER BY TIME DESC")
+            cursor.execute("SELECT USERS.NAME, USERS.LASTNAME, TYPE, TIME, STATUS, NOTIFICATIONS.ID FROM NOTIFICATIONS,USERS WHERE (FROMID = USERS.ID)")
             notifications_all = cursor.fetchall()
             connection.commit()
     return redirect(url_for('profile_page', notifications = notifications_all))
@@ -253,7 +253,7 @@ def notification_like():
             time = time.replace(microsecond=0)
             idtoinsert = request.form['idtoinsert']
             cursor.execute(query)
-            query = """INSERT INTO NOTIFICATIONS (ID, RECEIVERID, FROMID, TWEETID, TYPE, TIME, STATUS) VALUES (%s, 6213, 6212, %s, 'LIKE', '%s', 'UNSEEN')"""%(random.randint(1,1000000), idtoinsert, time)
+            query = """INSERT INTO NOTIFICATIONS (ID, RECEIVERID, FROMID, TWEETID, TYPE, TIME, STATUS) VALUES (%s, 631212, 631212, %s, 'LIKE', '%s', 'UNSEEN')"""%(random.randint(1,1000000), idtoinsert, time)
             cursor.execute("""SELECT * FROM TWEETS""")
             connection.commit()
 
@@ -270,7 +270,7 @@ def notification_retweet():
             time = datetime.now()
             time = time.replace(microsecond=0)
             idtoinsert = request.form['idtoinsert']
-            query = """INSERT INTO NOTIFICATIONS (ID, RECEIVERID, FROMID, TWEETID, TYPE, TIME, STATUS) VALUES (%s, 6213, 6212, %s, 'RETWEET', '%s', 'UNSEEN')"""%(random.randint(1,1000000), idtoinsert, time)
+            query = """INSERT INTO NOTIFICATIONS (ID, RECEIVERID, FROMID, TWEETID, TYPE, TIME, STATUS) VALUES (%s, 631212, 631212, %s, 'RETWEET', '%s', 'UNSEEN')"""%(random.randint(1,1000000), idtoinsert, time)
             cursor.execute(query)
 
             cursor.execute("""SELECT * FROM TWEETS""")
@@ -285,10 +285,10 @@ def notification_update():
         cursor = connection.cursor()
         if request.method == 'POST':
             idtoupdate = request.form['idtoupdate']
-            query = """UPDATE NOTIFICATIONS SET STATUS='SEEN' WHERE ID=%s;"""%idtoupdate
+            query = """UPDATE NOTIFICATIONS SET STATUS='SEEN' WHERE ID=%s"""%idtoupdate
             cursor.execute(query)
 
-            cursor.execute("SELECT * FROM NOTIFICATIONS ORDER BY TIME DESC")
+            cursor.execute("SELECT USERS.NAME, USERS.LASTNAME, TYPE, TIME, STATUS, NOTIFICATIONS.ID FROM NOTIFICATIONS,USERS WHERE (FROMID = USERS.ID)")
             notifications_all = cursor.fetchall()
             connection.commit()
     return redirect(url_for('profile_page', notifications = notifications_all))
@@ -530,19 +530,22 @@ def initialize_database():
         TWEETID SERIAL,
         TYPE VARCHAR(40),
         TIME TEXT,
-        STATUS VARCHAR(80)
+        STATUS VARCHAR(80),
+        FOREIGN KEY (FROMID) REFERENCES USERS(ID)
+            ON DELETE CASCADE
+            ON UPDATE CASCADE
          )
         """
         cursor.execute(query)
         time = datetime.now()
         time = time.replace(microsecond=0)
-        query = """INSERT INTO NOTIFICATIONS (ID, RECEIVERID, FROMID, TWEETID, TYPE, TIME, STATUS) VALUES (1000, 6312, 6213, 3455, 'LIKE', '%s', 'UNSEEN')"""%time
+        query = """INSERT INTO NOTIFICATIONS (ID, RECEIVERID, FROMID, TWEETID, TYPE, TIME, STATUS) VALUES (1000, 6312, 631212, 3455, 'LIKE', '%s', 'UNSEEN')"""%time
         cursor.execute(query)
 
-        query = """INSERT INTO NOTIFICATIONS (ID, RECEIVERID, FROMID, TWEETID, TYPE, TIME, STATUS) VALUES (1001, 1234, 6213, 3406, 'LIKE', '%s', 'UNSEEN')"""%time
+        query = """INSERT INTO NOTIFICATIONS (ID, RECEIVERID, FROMID, TWEETID, TYPE, TIME, STATUS) VALUES (1001, 1234, 631212, 3406, 'LIKE', '%s', 'UNSEEN')"""%time
         cursor.execute(query)
 
-        query = """INSERT INTO NOTIFICATIONS (ID, RECEIVERID, FROMID, TWEETID, TYPE, TIME, STATUS) VALUES (1002, 6312, 6213, 3434, 'LIKE', '%s', 'UNSEEN')"""%time
+        query = """INSERT INTO NOTIFICATIONS (ID, RECEIVERID, FROMID, TWEETID, TYPE, TIME, STATUS) VALUES (1002, 6312, 631212, 3434, 'LIKE', '%s', 'UNSEEN')"""%time
         cursor.execute(query)
 
 
@@ -566,15 +569,15 @@ def initialize_database():
         query = """CREATE TABLE FOLLOWING (
         ID SERIAL,
         FRIENDID SERIAL,
-        FOLLOWBACK BOOLEAN)
+        FOLLOWBACK BOOLEAN,
         FOREIGN KEY(ID) REFERENCES USERS(ID)
             ON DELETE CASCADE
             ON UPDATE CASCADE
-            
+            )
             """
         cursor.execute(query)
 
-        query = """INSERT INTO FOLLOWING (ID, FRIENDID,FOLLOWBACK) VALUES (6312, 6213,TRUE)"""
+        query = """INSERT INTO FOLLOWING (ID, FRIENDID,FOLLOWBACK) VALUES (631212, 6213,TRUE)"""
         cursor.execute(query)
 
         connection.commit()

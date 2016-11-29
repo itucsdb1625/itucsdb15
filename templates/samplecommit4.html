@@ -18,16 +18,16 @@
 	
 			<tr>
 			<td>
-				{{notification[2]}}, {{notification[4]}} your tweet {{notification[3]}} at {{notification[5]}}. This notification is {{notification[6]}}.  			          	
+				{{notification[0]}} {{notification[1]}}, {{notification[2]}} your tweet at {{notification[3]}}. This notification is {{notification[4]}}.  			          	
 			</td>
 			<td style="text-align:right">
 			<form action="{{ url_for('notification_update') }}" method = "POST">
-			<button type="submit" name="idtoupdate" onclick=testfunction() id={{notification[0]}} value={{notification[0]}}>Seen</button> </form>
+			<button type="submit" name="idtoupdate" onclick=testfunction() id={{notification[5]}} value={{notification[5]}}>Seen</button> </form>
 			</td>
 			<td style="text-align:right">
 			
 			<form action="{{ url_for('notification_delete') }}" method = "POST">
-			<button type="submit" name="idtodelete" onclick=testfunction() id={{notification[0]}} value={{notification[0]}}>Delete</button>	
+			<button type="submit" name="idtodelete" onclick=testfunction() id={{notification[5]}} value={{notification[5]}}>Delete</button>	
 			</form>
 			</td>
 			
