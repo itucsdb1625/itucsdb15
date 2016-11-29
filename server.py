@@ -57,7 +57,13 @@ def page_login():
 def messages_page():
     with dbapi2.connect(app.config['dsn']) as connection:
         cursor = connection.cursor()
-        cursor.execute("SELECT * FROM MESSAGES")
+        cursor.execute("""SELECT messages.id,U1.NAME,U1.LASTNAME,U2.NAME, U2.LASTNAME, messages.message,messages.timestamp
+        FROM messages
+        INNER JOIN USERS AS U1
+        ON messages.fromuser=U1.ID
+        INNER JOIN USERS AS U2
+        ON messages.touser=U2.ID"""
+        )
         messages_all = cursor.fetchall()
         connection.commit()
     return render_template('messages.html', messages = messages_all)
@@ -65,9 +71,18 @@ def messages_page():
 @app.route('/messages/new', methods = ['POST', 'GET'])
 def new_message_page():
     if request.method == 'GET':
-        return render_template('new_message.html')
+        with dbapi2.connect(app.config['dsn']) as connection:
+            cursor = connection.cursor()
+            cursor.execute("""SELECT ID, NAME, LASTNAME FROM users"""
+            )
+            to_send = cursor.fetchall()
+            connection.commit()
+
+        return render_template('new_message.html', tosend = to_send)
     else:
-        frm = request.form['from']
+
+
+        frm = current_user;
         to = request.form['to']
         msg = request.form['message']
         timestamp = datetime.now();
@@ -84,21 +99,19 @@ def update_message_page(message_id):
     if request.method == 'GET':
         with dbapi2.connect(app.config['dsn']) as connection:
             cursor = connection.cursor()
-            query = """SELECT * FROM MESSAGES WHERE ID=%s""" % (message_id)
+            query = """SELECT U1.NAME, U1.LASTNAME, U2.NAME, U2.LASTNAME, messages.message FROM MESSAGES, USERS AS U1, USERS AS U2 WHERE (MESSAGES.ID=%s) AND (U1.ID=MESSAGES.FROMUSER) AND (U2.ID=MESSAGES.TOUSER)""" % (message_id)
             cursor.execute(query)
             message = cursor.fetchall()
             connection.commit()
 
         return render_template('update_message.html', messages = message)
     else:
-        frm = request.form['from']
-        to = request.form['to']
         msg = request.form['message']
         timestamp = datetime.now();
 
         with dbapi2.connect(app.config['dsn']) as connection:
             cursor = connection.cursor()
-            query = """UPDATE MESSAGES SET FROMUSER='%s', TOUSER='%s', MESSAGE='%s', TIMESTAMP=%s WHERE ID=%s""" % (frm, to, msg, 0, message_id)
+            query = """UPDATE MESSAGES SET MESSAGE='%s', TIMESTAMP=%s WHERE ID=%s""" % (msg, 0, message_id)
             cursor.execute(query)
             connection.commit()
         return redirect('/messages')
@@ -466,18 +479,22 @@ def initialize_database():
         query = """INSERT INTO COUNTER (N) VALUES (0)"""
         cursor.execute(query)
 
-        query = """DROP TABLE IF EXISTS MESSAGES"""
+        query = """DROP TABLE IF EXISTS MESSAGES CASCADE"""
         cursor.execute(query)
 
         query = """CREATE TABLE MESSAGES (
         ID SERIAL,
-        FROMUSER VARCHAR(80),
-        TOUSER VARCHAR(80),
+        FROMUSER SERIAL,
+        TOUSER SERIAL,
         MESSAGE TEXT,
-        TIMESTAMP INTEGER)"""
-        cursor.execute(query)
-
-        query = """INSERT INTO MESSAGES (FROMUSER, TOUSER, MESSAGE, TIMESTAMP) VALUES ('Biri', 'Birine', 'Merhaba', 0)"""
+        TIMESTAMP INTEGER,
+        FOREIGN KEY(FROMUSER) REFERENCES USERS(ID)
+            ON DELETE CASCADE
+            ON UPDATE CASCADE,
+        FOREIGN KEY(TOUSER) REFERENCES USERS(ID)
+            ON DELETE CASCADE
+            ON UPDATE CASCADE
+        )"""
         cursor.execute(query)
 
         query = """DROP TABLE IF EXISTS USERS CASCADE"""
