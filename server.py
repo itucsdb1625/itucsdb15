@@ -12,7 +12,7 @@ import random
 from datetime import datetime
 app = Flask(__name__)
 
-current_user = 631212
+current_user = -1
 
 def get_elephantsql_dsn(vcap_services):
     """Returns the data source name for ElephantSQL."""
@@ -298,12 +298,13 @@ def efe_page():
     if 'add_tweet' in request.form:
         content = str(request.form['CONTENT'])
 
-        with dbapi2.connect(app.config['dsn']) as connection:
-            cursor = connection.cursor()
+        if current_user != -1:
+            with dbapi2.connect(app.config['dsn']) as connection:
+                cursor = connection.cursor()
 
-            cursor.execute("""INSERT INTO TWEETS (CONTENT, USER_ID) VALUES (%s, %s)""", [content, current_user])
+                cursor.execute("""INSERT INTO TWEETS (CONTENT, USER_ID) VALUES (%s, %s)""", [content, current_user])
 
-            connection.commit()
+                connection.commit()
 
     elif 'delete_tweet' in request.form:
         option = request.form['options']
@@ -523,7 +524,7 @@ def initialize_database():
         query = """DROP TABLE IF EXISTS NOTIFICATIONS"""
         cursor.execute(query)
 
-       query = """CREATE TABLE NOTIFICATIONS (
+        query = """CREATE TABLE NOTIFICATIONS (
         ID SERIAL PRIMARY KEY,
         RECEIVERID SERIAL,
         FROMID SERIAL,
