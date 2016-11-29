@@ -569,11 +569,11 @@ def initialize_database():
         query = """CREATE TABLE FOLLOWING (
         ID SERIAL,
         FRIENDID SERIAL,
-        FOLLOWBACK BOOLEAN)
+        FOLLOWBACK BOOLEAN
         FOREIGN KEY(ID) REFERENCES USERS(ID)
             ON DELETE CASCADE
             ON UPDATE CASCADE
-            
+            )
             """
         cursor.execute(query)
 
