@@ -10,7 +10,6 @@ from flask.helpers import url_for
 from flask import Flask, render_template, request
 import random
 from datetime import datetime
-
 app = Flask(__name__)
 
 
@@ -35,7 +34,7 @@ def page_login():
         if request.method == 'POST':
             mailentered = request.form['usermail']
             passentered = request.form['userpass']
-            query = """SELECT * FROM USERS WHERE email='%s' AND password='%s' """ % (mailentered, passentered)
+            query = """SELECT EMAIL,NAME,LastNAME FROM USERS WHERE email='%s' AND password='%s' """ % (mailentered, passentered)
             cursor.execute(query)
             allusers = cursor.fetchall()
             connection.commit()
@@ -147,7 +146,7 @@ def page_adminuser():
     with dbapi2.connect(app.config['dsn']) as connection:
         cursor = connection.cursor()
         if request.method == 'GET':
-            cursor.execute("SELECT * FROM USERS")
+            cursor.execute("SELECT ID,EMAIL,NAME,LASTNAME,PHONENUMBER,GENDER FROM USERS")
             allusers = cursor.fetchall()
             connection.commit()
     return render_template('page_useradmin.html',users = allusers)
@@ -161,7 +160,7 @@ def user_delete():
             query = """DELETE FROM USERS WHERE ID=%s""" % (idtodelete)
             cursor.execute(query)
 
-            cursor.execute("SELECT * FROM USERS")
+            cursor.execute("SELECT ID,EMAIL,NAME,LASTNAME,PHONENUMBER,GENDER FROM USERS")
             allusers = cursor.fetchall()
             connection.commit()
     return redirect(url_for('page_adminuser',users = allusers))
@@ -188,7 +187,7 @@ def page_updateuser():
             """ % (idr,eml,nm,lstnm,phnm,pssw,gndr,idr)
             cursor.execute(query)
             connection.commit()
-            cursor.execute("SELECT * FROM USERS")
+            cursor.execute("SELECT ID,EMAIL,NAME,LASTNAME,PHONENUMBER,GENDER FROM USERS")
             allusers = cursor.fetchall()
             connection.commit()
             return redirect(url_for('page_adminuser',users = allusers))
@@ -204,7 +203,7 @@ def user_select():
         cursor = connection.cursor()
         if request.method == 'POST':
             idtoselect = request.form['idtoselect']
-            query = """SELECT * FROM USERS WHERE ID=%s""" % (idtoselect)
+            query = """SELECT ID,EMAIL,NAME,LASTNAME,PHONENUMBER,PASSWORD,GENDER FROM USERS WHERE ID=%s""" % (idtoselect)
             cursor.execute(query)
             allusers = cursor.fetchall()
             connection.commit()
