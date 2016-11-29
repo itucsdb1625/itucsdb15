@@ -558,9 +558,14 @@ def initialize_database():
         query = """DROP TABLE IF EXISTS FOLLOWING"""
         cursor.execute(query)
         query = """CREATE TABLE FOLLOWING (
-        ID SERIAL PRIMARY KEY,
+        ID SERIAL,
         FRIENDID SERIAL,
-        FOLLOWBACK BOOLEAN)"""
+        FOLLOWBACK BOOLEAN)
+        FOREIGN KEY(ID) REFERENCES USERS(ID)
+            ON DELETE CASCADE
+            ON UPDATE CASCADE
+            
+            """
         cursor.execute(query)
 
         query = """INSERT INTO FOLLOWING (ID, FRIENDID,FOLLOWBACK) VALUES (6312, 6213,TRUE)"""
