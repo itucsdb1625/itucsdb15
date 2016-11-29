@@ -12,7 +12,7 @@ import random
 from datetime import datetime
 app = Flask(__name__)
 
-current_user = -1
+current_user = 631212
 
 def get_elephantsql_dsn(vcap_services):
     """Returns the data source name for ElephantSQL."""
@@ -215,6 +215,7 @@ def user_select():
             connection.commit()
     return render_template('page_updateuser.html',users = allusers)
 
+
 @app.route('/myprofile')
 def profile_page():
     with dbapi2.connect(app.config['dsn']) as connection:
@@ -292,19 +293,17 @@ def notification_update():
             connection.commit()
     return redirect(url_for('profile_page', notifications = notifications_all))
 
-
 @app.route('/tweetsPage', methods=['GET', 'POST'])
 def efe_page():
     if 'add_tweet' in request.form:
         content = str(request.form['CONTENT'])
 
-        if current_user != -1:
-            with dbapi2.connect(app.config['dsn']) as connection:
-                cursor = connection.cursor()
+        with dbapi2.connect(app.config['dsn']) as connection:
+            cursor = connection.cursor()
 
-                cursor.execute("""INSERT INTO TWEETS (CONTENT, USER_ID) VALUES (%s, %s)""", [content, current_user])
+            cursor.execute("""INSERT INTO TWEETS (CONTENT, USER_ID) VALUES (%s, %s)""", [content, current_user])
 
-                connection.commit()
+            connection.commit()
 
     elif 'delete_tweet' in request.form:
         option = request.form['options']
@@ -562,7 +561,7 @@ def initialize_database():
         cursor.execute(query)
         query = """INSERT INTO FOLLOWERS (ID, FRIENDID) VALUES (631212, 631375)"""
         cursor.execute(query)
-        query = """INSERT INTO FOLLOWERS (ID, FRIENDID) VALUES (631212, 6224)"""
+        query = """INSERT INTO FOLLOWERS (ID, FRIENDID) VALUES (6314, 6224)"""
         cursor.execute(query)
 
         query = """DROP TABLE IF EXISTS FOLLOWING"""
@@ -570,7 +569,7 @@ def initialize_database():
         query = """CREATE TABLE FOLLOWING (
         ID SERIAL,
         FRIENDID SERIAL,
-        FOLLOWBACK BOOLEAN
+        FOLLOWBACK BOOLEAN,
         FOREIGN KEY(ID) REFERENCES USERS(ID)
             ON DELETE CASCADE
             ON UPDATE CASCADE
