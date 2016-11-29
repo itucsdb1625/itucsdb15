@@ -12,6 +12,7 @@ import random
 from datetime import datetime
 app = Flask(__name__)
 
+current_user = 631212
 
 def get_elephantsql_dsn(vcap_services):
     """Returns the data source name for ElephantSQL."""
@@ -34,12 +35,17 @@ def page_login():
         if request.method == 'POST':
             mailentered = request.form['usermail']
             passentered = request.form['userpass']
-            query = """SELECT EMAIL,NAME,LastNAME FROM USERS WHERE email='%s' AND password='%s' """ % (mailentered, passentered)
+            query = """SELECT EMAIL,NAME,LastNAME,ID FROM USERS WHERE email='%s' AND password='%s' """ % (mailentered, passentered)
             cursor.execute(query)
             allusers = cursor.fetchall()
+            global current_user
+            for user in allusers:
+                current_user = user[3]
+
             connection.commit()
             rowcounter = cursor.rowcount
             if rowcounter > 0:
+
                 return render_template('page_profile_temp.html',users = allusers)
             else:
                  return render_template('loginpage.html')
@@ -295,7 +301,7 @@ def efe_page():
         with dbapi2.connect(app.config['dsn']) as connection:
             cursor = connection.cursor()
 
-            cursor.execute("""INSERT INTO TWEETS (CONTENT, USER_ID) VALUES (%s, 631378)""", [content])
+            cursor.execute("""INSERT INTO TWEETS (CONTENT, USER_ID) VALUES (%s, %s)""", [content, current_user])
 
             connection.commit()
 
