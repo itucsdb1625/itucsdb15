@@ -18,13 +18,13 @@
 			<td>{{message[3]}} {{message[4]}}</td>
 			<td>{{message[5]}}</td>
 			<td>{{message[6]}}</td>
-			<td><a href="{{ url_for('update_message_page', message_id = message[0]) }}"><span class="glyphicon glyphicon-edit"></span></td>
-			<td><a href="{{ url_for('delete_message_page', message_id = message[0]) }}"><span class="glyphicon glyphicon-remove"></span></td>
+			<td><a href="{{ url_for('messages.update_message_page', message_id = message[0]) }}"><span class="glyphicon glyphicon-edit"></span></td>
+			<td><a href="{{ url_for('messages.delete_message_page', message_id = message[0]) }}"><span class="glyphicon glyphicon-remove"></span></td>
 		</tr>
 		{% endfor %}
 	</table>
     {% else %}
     <h4>No messages yet</h4>
     {% endif %}
-    <a href="{{ url_for('new_message_page') }}">Send a new message</a>
+    <a href="{{ url_for('messages.new_message_page') }}">Send a new message</a>
 {% endblock %}
