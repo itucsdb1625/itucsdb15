@@ -69,7 +69,7 @@ def page_login():
 def page_signup():
     if request.method == 'POST':
        # if request.type['submit'] == 'register':
-            idr = random.randint(1,1000000)
+            
             eml = request.form['email']
             nm = request.form['firstname']
             lstnm = request.form['lastname']
@@ -83,9 +83,9 @@ def page_signup():
                  #query = "UPDATE COUNTER SET N = N + 1"
                  #cursor.execute(query)
 
-                 query = """INSERT INTO USERS (ID,EMAIL,NAME,LASTNAME,PHONENUMBER,PASSWORD,GENDER)
+                 query = """INSERT INTO USERS (EMAIL,NAME,LASTNAME,PHONENUMBER,PASSWORD,GENDER)
                         VALUES
-                        (%s,'%s', '%s', '%s', '%s', '%s', '%s')""" % (idr,eml,nm,lstnm,phnm,pssw,gndr)
+                        ('%s', '%s', '%s', '%s', '%s', '%s')""" % (eml,nm,lstnm,phnm,pssw,gndr)
                  cursor.execute(query)
 
 
