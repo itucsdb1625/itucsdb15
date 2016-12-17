@@ -40,13 +40,13 @@
 			<td>*****</td>
 			<td>{{user[5]}}</td>
 			
-			<form action="{{ url_for('user_select') }}" method = "POST">
+			<form action="{{ url_for('userops.user_select') }}" method = "POST">
 			<td>	
 			<button type="submit" name="idtoselect" id={{user[0]}} value={{user[0]}}>Update</button>
 			</td>
 			</form>
 			<td>	
-			<form action="{{ url_for('user_delete') }}" method = "POST">
+			<form action="{{ url_for('userops.user_delete') }}" method = "POST">
 			<button type="submit" name="idtodelete" id={{user[0]}} value={{user[0]}}>Delete</button>
 			</form>
 			</td>
