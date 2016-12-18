@@ -1,12 +1,57 @@
-{% extends "layout.html" %}
-{% block title %}Sign Up Page{% endblock %}
-{% block content %}
-	<h2 name="headertext">Welcome to Twitter Mini :)</h2>
-	<p>Use button below to join us!</p>
+
+<head>
+<style>
+
+
+div.ex4 {
+    padding: 50px;
+     border: 1px solid black;
+    background-color: lightblue;
+}
+
+h2.test
+{
+padding-left: 30px;
+padding-top: 30px;
+}
+</style>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title> Sign Up page</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  </head>
+  <body>
+    <nav class="navbar navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="{{ url_for('userops.page_login') }}">Home Page</a></li>
+     		<li> <a href="{{ url_for('userops.page_signup') }}">User Sign Up Page</a>
+     		</li>
+
+          </ul>
+        </div>
+      </div>
+    </nav>
+	<h2 class = "test" name="headertext">Welcome to Twitter Mini :)</h2>
 	
 	
 	
-	
+<div class="ex4">
 <form action="{{ url_for('userops.page_signup') }}" method = "POST">
 
 E-Mail: <br>
@@ -35,7 +80,7 @@ Password Again:<br>
 <br><br>
 <button type="submit" name="submit" value="register" onclick=testfunction()>Register</button>
 </form>
-
+</div>
 <script>
 
 function testfunction()
@@ -121,7 +166,7 @@ document.getElementsByName("headertext")[0].innerHTML=welcomemessage;},3000);
 </script>
 	
 	
-{% endblock %}
+
 
 
 
