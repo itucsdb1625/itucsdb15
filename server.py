@@ -12,7 +12,7 @@ import random
 from datetime import datetime
 app = Flask(__name__)
 
-current_user = -1
+global current_user
 
 def get_elephantsql_dsn(vcap_services):
     """Returns the data source name for ElephantSQL."""
@@ -26,6 +26,7 @@ def get_elephantsql_dsn(vcap_services):
 
 def create_app():
     global app
+    current_user = -1
     from messages import messages
     from userops import userops
 

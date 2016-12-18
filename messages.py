@@ -9,8 +9,9 @@ from flask import redirect
 from flask import render_template
 from flask.helpers import url_for
 from flask import Flask, render_template, request
-from __main__ import app, current_user
+from __main__ import app
 from datetime import datetime
+import server
 import random
 
 
@@ -46,7 +47,7 @@ def new_message_page():
     else:
 
 
-        frm = current_user;
+        frm = server.current_user;
         to = request.form['to']
         msg = request.form['message']
         timestamp = datetime.now();
