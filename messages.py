@@ -27,7 +27,8 @@ def messages_page():
         INNER JOIN USERS AS U1
         ON messages.fromuser=U1.ID
         INNER JOIN USERS AS U2
-        ON messages.touser=U2.ID"""
+        ON messages.touser=U2.ID
+        WHERE U1.ID='%s' OR U2.ID='%s' """ %(server.current_user,server.current_user)
         )
         messages_all = cursor.fetchall()
         connection.commit()
