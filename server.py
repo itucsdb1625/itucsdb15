@@ -29,21 +29,13 @@ def create_app():
     current_user = -1
     from messages import messages
     from userops import userops
+    from tweets import tweets
 
     app.register_blueprint(messages)
     app.register_blueprint(userops)
-    
+    app.register_blueprint(tweets)
+
     return app
-
-
-
-
-
-
-
-
-
-
 
 @app.route('/myprofile/deletenotification', methods = ['POST', 'GET'])
 def notification_delete():
@@ -107,55 +99,6 @@ def notification_update():
             notifications_all = cursor.fetchall()
             connection.commit()
     return redirect(url_for('profile_page', notifications = notifications_all))
-
-@app.route('/tweetsPage', methods=['GET', 'POST'])
-def efe_page():
-    if 'add_tweet' in request.form:
-        content = str(request.form['CONTENT'])
-
-        if current_user != -1:
-            with dbapi2.connect(app.config['dsn']) as connection:
-                cursor = connection.cursor()
-
-                cursor.execute("""INSERT INTO TWEETS (CONTENT, USER_ID) VALUES (%s, %s)""", [content, current_user])
-
-                connection.commit()
-
-    elif 'delete_tweet' in request.form:
-        option = request.form['options']
-
-        with dbapi2.connect(app.config['dsn']) as connection:
-            cursor = connection.cursor()
-
-            cursor.execute("""DELETE FROM TWEETS WHERE ID=%s""", option)
-
-            connection.commit()
-
-    elif 'update_tweet' in request.form:
-        option = request.form['options']
-
-        with dbapi2.connect(app.config['dsn']) as connection:
-            cursor = connection.cursor()
-
-            cursor.execute("""SELECT * FROM TWEETS WHERE ID=%s""", option)
-            selectedTweets = cursor.fetchall()
-            connection.commit()
-
-            return render_template('update_tweet.html', tweets = selectedTweets)
-
-    elif 'selected_update_tweet' in request.form:
-        tweetID = request.form['id']
-        newContent = request.form['content']
-
-        with dbapi2.connect(app.config['dsn']) as connection:
-            cursor = connection.cursor()
-
-            cursor.execute("""UPDATE TWEETS SET CONTENT=%s WHERE id=%s""", (newContent, tweetID))
-            connection.commit()
-
-    allTweets = get_allTweets()
-
-    return render_template('tweetsPage.html', tweets = allTweets)
 
 @app.route('/followers', methods=['GET', 'POST'])
 def followers_page():
@@ -432,4 +375,3 @@ if __name__ == '__main__':
 
     apps = create_app()
     apps.run(host='0.0.0.0', port=port, debug=debug)
-

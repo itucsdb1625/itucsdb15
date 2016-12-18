@@ -15,7 +15,7 @@
 <body>
 	<h2>Page of Efe Helvacı</h2>
 
-<form action="/tweetsPage" method="POST">
+<form action="{{ url_for('tweets.efe_page') }}" method="POST">
 	<font size="4" color="red">Add tweet</font>
 	<h5>If you are not logged in, your tweets will not be posted.</h5>
 	<h1>Tweet: </h1>
@@ -40,14 +40,14 @@
 			<td width="50%">{{tweet[2]}}</td>
 			<td>{{tweet[3]}}</td>
 			<td>
-			<form action="{{ url_for('notification_like') }}" method = "POST">			  
+			<form action="{{ url_for('notification_like') }}" method = "POST">
         	<button type="submit" name="idtoinsert" onclick=testfunction() id={{tweet[4]}} value={{tweet[4]}}>Like</button>
-        	</form>    
+        	</form>
     		</td>
     		<td>
-			<form action="{{ url_for('notification_retweet') }}" method = "POST">			  
+			<form action="{{ url_for('notification_retweet') }}" method = "POST">
         	<button type="submit" name="idtoinsert" onclick=testfunction() id={{tweet[4]}} value={{tweet[4]}}>Retweet</button>
-        	</form>    
+        	</form>
     		</td>
 		</tr>
 		{% endfor %}
