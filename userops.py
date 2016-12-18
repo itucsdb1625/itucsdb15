@@ -9,7 +9,8 @@ from flask import redirect
 from flask import render_template
 from flask.helpers import url_for
 from flask import Flask, render_template, request
-from __main__ import app, current_user
+from __main__ import app
+import server
 from datetime import datetime
 import random
 
@@ -30,11 +31,14 @@ def page_login():
             query = """SELECT EMAIL,NAME,LastNAME,ID FROM USERS WHERE email='%s' AND password='%s' """ % (mailentered, passentered)
             cursor.execute(query)
             allusers = cursor.fetchall()
-            global current_user
             for user in allusers:
-                current_user = user[3]
+                 server.current_user = user[3]
 
             connection.commit()
+            
+            if server.current_user==999999:
+                return redirect(url_for('userops.page_adminuser'))
+            
             rowcounter = cursor.rowcount
             if rowcounter > 0:
 
@@ -42,6 +46,7 @@ def page_login():
             else:
                  return render_template('loginpage.html')
         elif request.method == 'GET':
+            current_user=-1
             return render_template('loginpage.html')
 
 
