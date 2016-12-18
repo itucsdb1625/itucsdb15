@@ -1,94 +1,37 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-    <title>NewTwitter - {% block title %}{% endblock %}</title>
-
-    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css') }}" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  </head>
-  <body>
-    <nav class="navbar navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
+<html>
+<title>NewTwitter</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
+<body>
+    <div class="w3-row">
+        <div class="w3-container w3-indigo">
+            <h1>NewTwitter</h1>
         </div>
-        <div id="navbar" class="collapse navbar-collapse">
-          <ul class="nav navbar-nav">
-            <li class="active"><a href="{{ url_for('userops.page_login') }}">Home Page</a></li>
-     		<li> <a href="{{ url_for('userops.page_signup') }}">User Sign Up Page</a>
-     		</li>
-
-          </ul>
+        
         </div>
-      </div>
-    </nav>
-
-    <div class="container" role="main">
-      {% block content %}{% endblock %}
+        <div class="w3-third w3-container" style="max-width: 350px">
+            <div id="login" class="w3-container w3-margin-top tab w3-animate-opacity">
+                <form action="{{ url_for('userops.page_login') }}" method = "POST" class="w3-container w3-card-4">
+                    <p>
+                        <input class="w3-input" type="text" name="usermail" style="width:90%" required>
+                        <label class="w3-label w3-validate">E-mail</label>
+                    </p>
+                    <p>
+                        <input class="w3-input" type="password" name="userpass" style="width:90%" required>
+                        <label class="w3-label w3-validate">Password</label>
+                    </p>
+                    <p>
+                        <button class="w3-btn w3-section w3-teal w3-ripple"> Log in </button>
+                    </p>
+                </form>
+                <p>Do you not have an account? <a href="{{ url_for('userops.page_signup') }}">Sign Up</a></p>
+            </div>
+            
+        </div>
     </div>
-
-   <h1>Please Login or Signup</h1>
-    
-    <ul>
-	    <li> Login page will come here. </li>
-    </ul>
-    
-    
-    
-
-<form action="{{ url_for('userops.page_login') }}" method = "POST">
-
-  <div class="container">
-  <h2>Let's Go!</h2>
-    <label><b>E-Mail</b></label>
-    <input type="text" placeholder="Enter E-Mail" name="usermail" >
-    <label><b>Password</b></label>
-    <input type="password" placeholder="Enter Password" name="userpass" >
     <br>
-    <label><button type="submit" name="loginbutton">Login</button></label>  
+
     
-     
-	<label><a href="{{ url_for('userops.page_signup') }}">Sign Up</a></label>
-    
-
-
-  </div>
-
-
-
-
-  <div class="container" style="background-color:#f1f1f1">
-    <span class="psw"><a href="#">Forgot password?(soon)</a></span>
-  </div>
-</form>
- 
-    
-    
-    
-    
-	<a href="http://s05.flagcounter.com/more/wkp"><img src="http://s05.flagcounter.com/countxl/wkp/bg_FFFFFF/txt_000000/border_CCCCCC/columns_8/maxflags_250/viewers_0/labels_0/pageviews_1/flags_0/percent_0/" alt="Flag Counter" border="0"></a>
-
-
-
-
-
-    <footer>
-      &copy; 2016, İTU cs db 1625
-    </footer>
-
-    <script src="{{ url_for('static', filename='jquery.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='bootstrap.min.js') }}"></script>
-  </body>
+</body>
 </html>
-
- 
