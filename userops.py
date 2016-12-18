@@ -78,7 +78,7 @@ def page_signup():
 
                  connection.commit()
 
-            return render_template('page_signup.html')
+            return render_template('loginpage.html')
 
     elif request.method == 'GET':
 
