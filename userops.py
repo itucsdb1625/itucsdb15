@@ -104,7 +104,7 @@ def user_delete():
             cursor.execute("SELECT ID,EMAIL,NAME,LASTNAME,PHONENUMBER,GENDER FROM USERS")
             allusers = cursor.fetchall()
             connection.commit()
-    return redirect(url_for('page_adminuser',users = allusers))
+    return redirect(url_for('userops.page_adminuser',users = allusers))
 
 
 
@@ -131,7 +131,7 @@ def page_updateuser():
             cursor.execute("SELECT ID,EMAIL,NAME,LASTNAME,PHONENUMBER,GENDER FROM USERS")
             allusers = cursor.fetchall()
             connection.commit()
-            return redirect(url_for('page_adminuser',users = allusers))
+            return redirect(url_for('userops.page_adminuser',users = allusers))
 
         elif request.method == 'GET':
 
