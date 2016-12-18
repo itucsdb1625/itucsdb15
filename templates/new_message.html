@@ -3,8 +3,11 @@
 {% block content %}
     <h2>Communicate with people!</h2>
     <form action="" method="POST">
-        From: <input type="text" name="from" /><br />
-        To: <input type="text" name="to" /><br />
+        To: <select name="to">
+            {% for to in tosend %}
+                <option value="{{to[0]}}">{{to[1]}} {{to[2]}}</option>
+            {% endfor %}
+            </select>
         Message: <input type="textarea" name="message" /><br />
         <button type="submit">Send</button>
     </form>

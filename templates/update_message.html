@@ -4,9 +4,9 @@
     <h2>Update Message</h2>
     {% for message in messages %}
     <form action="" method="POST">
-        From: <input type="text" name="from" value="{{message[1]}}" /><br />
-        To: <input type="text" name="to" value="{{message[2]}}" /><br />
-        Message: <input type="textarea" name="message" value="{{message[3]}}" /><br />
+        From: {{message[0]}} {{message[1]}}<br />
+        To: {{message[2]}} {{message[3]}} <br />
+        Message: <input type="textarea" name="message" value="{{message[4]}}" /><br />
         <button type="submit">Confirm</button>
     </form>
     {% endfor %}

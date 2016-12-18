@@ -24,206 +24,20 @@ def get_elephantsql_dsn(vcap_services):
              dbname='{}'""".format(user, password, host, port, dbname)
     return dsn
 
-@app.route('/page_login')
-def home_page():
-    return render_template('home.html')
+def create_app():
+    global app
+    from messages import messages
+    from userops import userops
 
-@app.route('/', methods = ['POST', 'GET'])
-def page_login():
-    with dbapi2.connect(app.config['dsn']) as connection:
-        cursor = connection.cursor()
-        if request.method == 'POST':
-            mailentered = request.form['usermail']
-            passentered = request.form['userpass']
-            query = """SELECT EMAIL,NAME,LastNAME,ID FROM USERS WHERE email='%s' AND password='%s' """ % (mailentered, passentered)
-            cursor.execute(query)
-            allusers = cursor.fetchall()
-            global current_user
-            for user in allusers:
-                current_user = user[3]
-
-            connection.commit()
-            rowcounter = cursor.rowcount
-            if rowcounter > 0:
-
-                return render_template('page_profile_temp.html',users = allusers)
-            else:
-                 return render_template('loginpage.html')
-        elif request.method == 'GET':
-            return render_template('loginpage.html')
+    app.register_blueprint(messages)
+    app.register_blueprint(userops)
     
-
-@app.route('/messages')
-def messages_page():
-    with dbapi2.connect(app.config['dsn']) as connection:
-        cursor = connection.cursor()
-        cursor.execute("SELECT * FROM MESSAGES")
-        messages_all = cursor.fetchall()
-        connection.commit()
-    return render_template('messages.html', messages = messages_all)
-
-@app.route('/messages/new', methods = ['POST', 'GET'])
-def new_message_page():
-    if request.method == 'GET':
-        return render_template('new_message.html')
-    else:
-        frm = request.form['from']
-        to = request.form['to']
-        msg = request.form['message']
-        timestamp = datetime.now();
-
-        with dbapi2.connect(app.config['dsn']) as connection:
-            cursor = connection.cursor()
-            query = """INSERT INTO MESSAGES (FROMUSER, TOUSER, MESSAGE, TIMESTAMP) VALUES ('%s', '%s', '%s', %s)""" % (frm, to, msg, 0)
-            cursor.execute(query)
-            connection.commit()
-        return redirect('/messages')
-
-@app.route('/messages/update/<int:message_id>', methods = ['POST', 'GET'])
-def update_message_page(message_id):
-    if request.method == 'GET':
-        with dbapi2.connect(app.config['dsn']) as connection:
-            cursor = connection.cursor()
-            query = """SELECT * FROM MESSAGES WHERE ID=%s""" % (message_id)
-            cursor.execute(query)
-            message = cursor.fetchall()
-            connection.commit()
-
-        return render_template('update_message.html', messages = message)
-    else:
-        frm = request.form['from']
-        to = request.form['to']
-        msg = request.form['message']
-        timestamp = datetime.now();
-
-        with dbapi2.connect(app.config['dsn']) as connection:
-            cursor = connection.cursor()
-            query = """UPDATE MESSAGES SET FROMUSER='%s', TOUSER='%s', MESSAGE='%s', TIMESTAMP=%s WHERE ID=%s""" % (frm, to, msg, 0, message_id)
-            cursor.execute(query)
-            connection.commit()
-        return redirect('/messages')
-
-@app.route('/messages/delete/<int:message_id>')
-def delete_message_page(message_id):
-    with dbapi2.connect(app.config['dsn']) as connection:
-        cursor = connection.cursor()
-        query = """DELETE FROM MESSAGES WHERE ID=%s""" % (message_id)
-        cursor.execute(query)
-        connection.commit()
-    return redirect('/messages')
-
-@app.route('/signup', methods = ['POST', 'GET'])
-def page_signup():
-    if request.method == 'POST':
-       # if request.type['submit'] == 'register':
-            idr = random.randint(1,1000000)
-            eml = request.form['email']
-            nm = request.form['firstname']
-            lstnm = request.form['lastname']
-            phnm =  request.form['phonenumber']
-            pssw = request.form['password']
-            gndr = request.form['gender']
-
-            with dbapi2.connect(app.config['dsn']) as connection:
-                 cursor = connection.cursor()
-
-                 #query = "UPDATE COUNTER SET N = N + 1"
-                 #cursor.execute(query)
-
-                 query = """INSERT INTO USERS (ID,EMAIL,NAME,LASTNAME,PHONENUMBER,PASSWORD,GENDER)
-                        VALUES
-                        (%s,'%s', '%s', '%s', '%s', '%s', '%s')""" % (idr,eml,nm,lstnm,phnm,pssw,gndr)
-                 cursor.execute(query)
-
-
-                 connection.commit()
-
-            return render_template('page_signup.html')
-
-    elif request.method == 'GET':
-
-        return render_template('page_signup.html')
+    return app
 
 
 
-@app.route('/adminuser', methods = ['POST', 'GET'])
-def page_adminuser():
-
-    with dbapi2.connect(app.config['dsn']) as connection:
-        cursor = connection.cursor()
-        if request.method == 'GET':
-            cursor.execute("SELECT ID,EMAIL,NAME,LASTNAME,PHONENUMBER,GENDER FROM USERS")
-            allusers = cursor.fetchall()
-            connection.commit()
-    return render_template('page_useradmin.html',users = allusers)
-
-@app.route('/adminuser/deleteuser', methods = ['POST', 'GET'])
-def user_delete():
-    with dbapi2.connect(app.config['dsn']) as connection:
-        cursor = connection.cursor()
-        if request.method == 'POST':
-            idtodelete = request.form['idtodelete']
-            query = """DELETE FROM USERS WHERE ID=%s""" % (idtodelete)
-            cursor.execute(query)
-
-            cursor.execute("SELECT ID,EMAIL,NAME,LASTNAME,PHONENUMBER,GENDER FROM USERS")
-            allusers = cursor.fetchall()
-            connection.commit()
-    return redirect(url_for('page_adminuser',users = allusers))
 
 
-
-@app.route('/adminuser/updateuser', methods = ['POST', 'GET'])
-def page_updateuser():
-    with dbapi2.connect(app.config['dsn']) as connection:
-        cursor = connection.cursor()
-        if request.method == 'POST':
-
-            idr = request.form['id']
-            eml = request.form['email']
-            nm = request.form['firstname']
-            lstnm = request.form['lastname']
-            phnm =  request.form['phonenumber']
-            pssw = request.form['password']
-            gndr = request.form['gender']
-
-
-            query = """UPDATE USERS SET id=%s,email='%s',name='%s',lastname='%s',phonenumber='%s',password='%s',gender='%s'
-            WHERE id=%s;
-            """ % (idr,eml,nm,lstnm,phnm,pssw,gndr,idr)
-            cursor.execute(query)
-            connection.commit()
-            cursor.execute("SELECT ID,EMAIL,NAME,LASTNAME,PHONENUMBER,GENDER FROM USERS")
-            allusers = cursor.fetchall()
-            connection.commit()
-            return redirect(url_for('page_adminuser',users = allusers))
-
-        elif request.method == 'GET':
-
-            return render_template('page_updateuser.html')
-
-
-@app.route('/adminuser/selectuser', methods = ['POST', 'GET'])
-def user_select():
-    with dbapi2.connect(app.config['dsn']) as connection:
-        cursor = connection.cursor()
-        if request.method == 'POST':
-            idtoselect = request.form['idtoselect']
-            query = """SELECT ID,EMAIL,NAME,LASTNAME,PHONENUMBER,PASSWORD,GENDER FROM USERS WHERE ID=%s""" % (idtoselect)
-            cursor.execute(query)
-            allusers = cursor.fetchall()
-            connection.commit()
-    return render_template('page_updateuser.html',users = allusers)
-
-
-@app.route('/myprofile')
-def profile_page():
-    with dbapi2.connect(app.config['dsn']) as connection:
-        cursor = connection.cursor()
-        cursor.execute("SELECT USERS.NAME, USERS.LASTNAME, TYPE, TIME, STATUS, NOTIFICATIONS.ID FROM NOTIFICATIONS,USERS WHERE (FROMID = USERS.ID)")
-        notifications_all = cursor.fetchall()
-        connection.commit()
-    return render_template('samplecommit4.html', notifications = notifications_all)
 
 
 
@@ -422,6 +236,16 @@ def followers_insert():
 def following_page():
     return render_template('following.html')
 
+@app.route('/myprofile')
+def profile_page():
+    with dbapi2.connect(app.config['dsn']) as connection:
+        cursor = connection.cursor()
+        cursor.execute("SELECT USERS.NAME, USERS.LASTNAME, TYPE, TIME, STATUS, NOTIFICATIONS.ID FROM NOTIFICATIONS,USERS WHERE (FROMID = USERS.ID)")
+        notifications_all = cursor.fetchall()
+        connection.commit()
+    return render_template('samplecommit4.html', notifications = notifications_all)
+
+
 @app.route('/samplecommit5')
 def kursat_page():
     return render_template('samplecommit5.html')
@@ -466,18 +290,22 @@ def initialize_database():
         query = """INSERT INTO COUNTER (N) VALUES (0)"""
         cursor.execute(query)
 
-        query = """DROP TABLE IF EXISTS MESSAGES"""
+        query = """DROP TABLE IF EXISTS MESSAGES CASCADE"""
         cursor.execute(query)
 
         query = """CREATE TABLE MESSAGES (
         ID SERIAL,
-        FROMUSER VARCHAR(80),
-        TOUSER VARCHAR(80),
+        FROMUSER SERIAL,
+        TOUSER SERIAL,
         MESSAGE TEXT,
-        TIMESTAMP INTEGER)"""
-        cursor.execute(query)
-
-        query = """INSERT INTO MESSAGES (FROMUSER, TOUSER, MESSAGE, TIMESTAMP) VALUES ('Biri', 'Birine', 'Merhaba', 0)"""
+        TIMESTAMP INTEGER,
+        FOREIGN KEY(FROMUSER) REFERENCES USERS(ID)
+            ON DELETE CASCADE
+            ON UPDATE CASCADE,
+        FOREIGN KEY(TOUSER) REFERENCES USERS(ID)
+            ON DELETE CASCADE
+            ON UPDATE CASCADE
+        )"""
         cursor.execute(query)
 
         query = """DROP TABLE IF EXISTS USERS CASCADE"""
@@ -509,16 +337,19 @@ def initialize_database():
         )"""
         cursor.execute(query)
 
-        query = """INSERT INTO USERS (ID,EMAIL,NAME,LASTNAME,PHONENUMBER,PASSWORD,GENDER) VALUES (631212,'koksalb@itu.edu.tr','Berkay','Koksal','05385653858','parola123','Male')"""
+        query = """INSERT INTO USERS (ID,EMAIL,NAME,LASTNAME,PHONENUMBER,PASSWORD,GENDER) VALUES (999999,'admin','admin','admin','123456789','admin','Other')"""
         cursor.execute(query)
 
-        query = """INSERT INTO USERS (ID,EMAIL,NAME,LASTNAME,PHONENUMBER,PASSWORD,GENDER) VALUES (631378,'helvacie@itu.edu.tr','Efe','Helvaci','05442609613','efeparola','Male')"""
+        query = """INSERT INTO USERS (ID,EMAIL,NAME,LASTNAME,PHONENUMBER,PASSWORD,GENDER) VALUES (999998,'koksalb@itu.edu.tr','Berkay','Koksal','05385653858','parola123','Male')"""
         cursor.execute(query)
 
-        query = """INSERT INTO USERS (ID,EMAIL,NAME,LASTNAME,PHONENUMBER,PASSWORD,GENDER) VALUES (631375,'yasarku@itu.edu.tr','kursat','yasar','05442609613','efeparola','Male')"""
+        query = """INSERT INTO USERS (ID,EMAIL,NAME,LASTNAME,PHONENUMBER,PASSWORD,GENDER) VALUES (999997,'helvacie@itu.edu.tr','Efe','Helvaci','05442609613','efeparola','Male')"""
         cursor.execute(query)
 
-        query = """INSERT INTO TWEETS (CONTENT, USER_ID) VALUES ('Hello, twitter!', 631378)"""
+        query = """INSERT INTO USERS (ID,EMAIL,NAME,LASTNAME,PHONENUMBER,PASSWORD,GENDER) VALUES (999996,'yasarku@itu.edu.tr','kursat','yasar','05442609613','kursatparola','Male')"""
+        cursor.execute(query)
+
+        query = """INSERT INTO TWEETS (CONTENT, USER_ID) VALUES ('Hello, twitter!', 999997)"""
         cursor.execute(query)
 
         query = """DROP TABLE IF EXISTS NOTIFICATIONS"""
@@ -540,13 +371,13 @@ def initialize_database():
         cursor.execute(query)
         time = datetime.now()
         time = time.replace(microsecond=0)
-        query = """INSERT INTO NOTIFICATIONS (ID, RECEIVERID, FROMID, TWEETID, TYPE, TIME, STATUS) VALUES (1000, 6312, 631212, 3455, 'LIKE', '%s', 'UNSEEN')"""%time
+        query = """INSERT INTO NOTIFICATIONS (ID, RECEIVERID, FROMID, TWEETID, TYPE, TIME, STATUS) VALUES (1000, 999998, 999997, 3455, 'LIKE', '%s', 'UNSEEN')"""%time
         cursor.execute(query)
 
-        query = """INSERT INTO NOTIFICATIONS (ID, RECEIVERID, FROMID, TWEETID, TYPE, TIME, STATUS) VALUES (1001, 1234, 631212, 3406, 'LIKE', '%s', 'UNSEEN')"""%time
+        query = """INSERT INTO NOTIFICATIONS (ID, RECEIVERID, FROMID, TWEETID, TYPE, TIME, STATUS) VALUES (1001, 999997, 999996, 3406, 'LIKE', '%s', 'UNSEEN')"""%time
         cursor.execute(query)
 
-        query = """INSERT INTO NOTIFICATIONS (ID, RECEIVERID, FROMID, TWEETID, TYPE, TIME, STATUS) VALUES (1002, 6312, 631212, 3434, 'LIKE', '%s', 'UNSEEN')"""%time
+        query = """INSERT INTO NOTIFICATIONS (ID, RECEIVERID, FROMID, TWEETID, TYPE, TIME, STATUS) VALUES (1002, 999996, 999997, 3434, 'LIKE', '%s', 'UNSEEN')"""%time
         cursor.execute(query)
 
 
@@ -558,11 +389,11 @@ def initialize_database():
         FRIENDID SERIAL)"""
         cursor.execute(query)
 
-        query = """INSERT INTO FOLLOWERS (ID, FRIENDID) VALUES (631212, 631378)"""
+        query = """INSERT INTO FOLLOWERS (ID, FRIENDID) VALUES (999998, 999997)"""
         cursor.execute(query)
-        query = """INSERT INTO FOLLOWERS (ID, FRIENDID) VALUES (631212, 631375)"""
+        query = """INSERT INTO FOLLOWERS (ID, FRIENDID) VALUES (999997, 999996)"""
         cursor.execute(query)
-        query = """INSERT INTO FOLLOWERS (ID, FRIENDID) VALUES (6314, 6224)"""
+        query = """INSERT INTO FOLLOWERS (ID, FRIENDID) VALUES (999996, 999997)"""
         cursor.execute(query)
 
         query = """DROP TABLE IF EXISTS FOLLOWING"""
@@ -578,12 +409,11 @@ def initialize_database():
             """
         cursor.execute(query)
 
-        query = """INSERT INTO FOLLOWING (ID, FRIENDID,FOLLOWBACK) VALUES (631212, 6213,TRUE)"""
+        query = """INSERT INTO FOLLOWING (ID, FRIENDID,FOLLOWBACK) VALUES (999997, 999996,TRUE)"""
         cursor.execute(query)
 
         connection.commit()
-    return redirect(url_for('home_page'))
-
+    return redirect(url_for('userops.page_login'))
 
 if __name__ == '__main__':
 
@@ -599,5 +429,6 @@ if __name__ == '__main__':
         app.config['dsn'] = """user='hknbgryr' password='Yte_gcTO9oEeCFVM7dKv53djw8VnaJwP'
                                host='jumbo.db.elephantsql.com' port=5432 dbname='hknbgryr'"""
 
-    app.run(host='0.0.0.0', port=port, debug=debug)
+    apps = create_app()
+    apps.run(host='0.0.0.0', port=port, debug=debug)
 
