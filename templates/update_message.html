@@ -4,10 +4,15 @@
     <h2>Update Message</h2>
     {% for message in messages %}
     <form action="" method="POST">
-        From: {{message[0]}} {{message[1]}}<br />
-        To: {{message[2]}} {{message[3]}} <br />
-        Message: <input type="textarea" name="message" value="{{message[4]}}" /><br />
-        <button type="submit">Confirm</button>
+        <p><label class="w3-label">From:</label> {{message[0]}} {{message[1]}}</p>
+        <p><label class="w3-label">To:</label> {{message[2]}} {{message[3]}}</p>
+        <p>
+        <label class="w3-label">Message:</label>
+        <input class="w3-input w3-hover-light-grey w3-border w3-animate-input" type="textarea" name="message" value="{{message[4]}}" />
+        </p>
+        <p>
+        <button class="w3-btn w3-teal" type="submit">Confirm</button>
+        </p>
     </form>
     {% endfor %}
 {% endblock %}

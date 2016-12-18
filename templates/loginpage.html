@@ -8,7 +8,7 @@
         <div class="w3-container w3-indigo">
             <h1>NewTwitter</h1>
         </div>
-        
+
         </div>
         <div class="w3-third w3-container" style="max-width: 350px">
             <div id="login" class="w3-container w3-margin-top tab w3-animate-opacity">
@@ -25,13 +25,61 @@
                         <button class="w3-btn w3-section w3-teal w3-ripple"> Log in </button>
                     </p>
                 </form>
-                <p>Do you not have an account? <a href="{{ url_for('userops.page_signup') }}">Sign Up</a></p>
+                <p>Do you not have an account? <a href="javascript:void(0)" onclick="changeTab('signup')">Sign Up</a></p>
             </div>
-            
+            <div id="signup" class="w3-container w3-margin-top tab w3-animate-opacity">
+                <form class="w3-container w3-card-4" action="{{ url_for('userops.page_signup') }}"  method = "POST" >
+                    <p>
+                        <input class="w3-input" type="text" style="width:90%" name="email" required>
+                        <label class="w3-label w3-validate">E-mail</label>
+                    </p>
+                    <p>
+                        <input class="w3-input" type="password" style="width:90%" name="firstname" required>
+                        <label class="w3-label w3-validate">First Name</label>
+                    </p>
+                    <p>
+                        <input class="w3-input" type="password" style="width:90%" name="lastname" required>
+                        <label class="w3-label w3-validate">Last Name</label>
+                    </p>
+                    <p>
+                        <input class="w3-input" type="phonenumber" style="width:90%" name="phonenumber" required>
+                        <label class="w3-label w3-validate">Phone Number</label>
+                    </p>
+                    <p>
+                        <input class="w3-input" type="password" style="width:90%" name="password" required>
+                        <label class="w3-label w3-validate">Password</label>
+                    </p>
+                    <p>
+                        <input class="w3-input" type="password" style="width:90%" name="password2" required>
+                        <label class="w3-label w3-validate">Password (Again)</label>
+                    </p>
+                    <p>
+                        <input class="w3-radio" type="radio" name="gender" value="male" checked><label class="w3-validate">Male</label>
+                         <input class="w3-radio" type="radio" name="gender" value="female"><label class="w3-validate">Female</label>
+                         <input class="w3-radio" type="radio" name="gender" value="other"><label class="w3-validate">Other</label>
+                    </p>
+                    <p>
+                        <button class="w3-btn w3-section w3-teal w3-ripple"> Sign up </button>
+                    </p>
+                </form>
+                <p>Already have an account? <a href="javascript:void(0)" onclick="changeTab('login')">Login</a></p>
+            </div>
+            <script>
+                changeTab("login");
+                function changeTab(tab) {
+                    var i;
+                    var x = document.getElementsByClassName("tab");
+                    for (i = 0; i < x.length; i++) {
+                       x[i].style.display = "none";
+                    }
+                    document.getElementById(tab).style.display = "block";
+                }
+            </script>
+
         </div>
     </div>
     <br>
 
-    
+
 </body>
 </html>

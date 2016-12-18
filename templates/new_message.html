@@ -3,12 +3,19 @@
 {% block content %}
     <h2>Communicate with people!</h2>
     <form action="" method="POST">
-        To: <select name="to">
+        <label class="w3-label">To:</label>
+        <select class="w3-select" name="to">
+            <option value="" disabled selected>Choose a user</option>
             {% for to in tosend %}
                 <option value="{{to[0]}}">{{to[1]}} {{to[2]}}</option>
             {% endfor %}
             </select>
-        Message: <input type="textarea" name="message" /><br />
-        <button type="submit">Send</button>
+        <p>
+        <label class="w3-label">Message:</label>
+        <input class="w3-input w3-hover-light-grey w3-border" type="textarea" name="message" /><br />
+    </p>
+    <p>
+        <button class="w3-btn w3-teal" type="submit">Send</button>
+    </p>
     </form>
 {% endblock %}
