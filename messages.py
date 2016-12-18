@@ -22,14 +22,24 @@ messages = Blueprint('messages', __name__)
 def messages_page():
     with dbapi2.connect(app.config['dsn']) as connection:
         cursor = connection.cursor()
-        cursor.execute("""SELECT messages.id,U1.NAME,U1.LASTNAME,U2.NAME, U2.LASTNAME, messages.message,messages.timestamp
+        if server.current_user!=999999:
+            cursor.execute("""SELECT messages.id,U1.NAME,U1.LASTNAME,U2.NAME, U2.LASTNAME, messages.message,messages.timestamp
         FROM messages
         INNER JOIN USERS AS U1
         ON messages.fromuser=U1.ID
         INNER JOIN USERS AS U2
         ON messages.touser=U2.ID
         WHERE U1.ID='%s' OR U2.ID='%s' """ %(server.current_user,server.current_user)
-        )
+            )
+        else:
+            cursor.execute("""SELECT messages.id,U1.NAME,U1.LASTNAME,U2.NAME, U2.LASTNAME, messages.message,messages.timestamp
+        FROM messages
+        INNER JOIN USERS AS U1
+        ON messages.fromuser=U1.ID
+        INNER JOIN USERS AS U2
+        ON messages.touser=U2.ID""" 
+            )
+        
         messages_all = cursor.fetchall()
         connection.commit()
     return render_template('messages.html', messages = messages_all)
