@@ -35,6 +35,10 @@ def page_login():
                 current_user = user[3]
 
             connection.commit()
+            
+            if current_user==999999:
+                return redirect(url_for('userops.page_adminuser'))
+            
             rowcounter = cursor.rowcount
             if rowcounter > 0:
 
@@ -42,6 +46,7 @@ def page_login():
             else:
                  return render_template('loginpage.html')
         elif request.method == 'GET':
+            current_user=-1
             return render_template('loginpage.html')
 
 
