@@ -236,6 +236,16 @@ def followers_insert():
 def following_page():
     return render_template('following.html')
 
+@app.route('/myprofile')
+def profile_page():
+    with dbapi2.connect(app.config['dsn']) as connection:
+        cursor = connection.cursor()
+        cursor.execute("SELECT USERS.NAME, USERS.LASTNAME, TYPE, TIME, STATUS, NOTIFICATIONS.ID FROM NOTIFICATIONS,USERS WHERE (FROMID = USERS.ID)")
+        notifications_all = cursor.fetchall()
+        connection.commit()
+    return render_template('samplecommit4.html', notifications = notifications_all)
+
+
 @app.route('/samplecommit5')
 def kursat_page():
     return render_template('samplecommit5.html')
@@ -327,16 +337,19 @@ def initialize_database():
         )"""
         cursor.execute(query)
 
-        query = """INSERT INTO USERS (ID,EMAIL,NAME,LASTNAME,PHONENUMBER,PASSWORD,GENDER) VALUES (631212,'koksalb@itu.edu.tr','Berkay','Koksal','05385653858','parola123','Male')"""
+        query = """INSERT INTO USERS (ID,EMAIL,NAME,LASTNAME,PHONENUMBER,PASSWORD,GENDER) VALUES (999999,'admin','admin','admin','123456789','admin','Other')"""
         cursor.execute(query)
 
-        query = """INSERT INTO USERS (ID,EMAIL,NAME,LASTNAME,PHONENUMBER,PASSWORD,GENDER) VALUES (631378,'helvacie@itu.edu.tr','Efe','Helvaci','05442609613','efeparola','Male')"""
+        query = """INSERT INTO USERS (ID,EMAIL,NAME,LASTNAME,PHONENUMBER,PASSWORD,GENDER) VALUES (999998,'koksalb@itu.edu.tr','Berkay','Koksal','05385653858','parola123','Male')"""
         cursor.execute(query)
 
-        query = """INSERT INTO USERS (ID,EMAIL,NAME,LASTNAME,PHONENUMBER,PASSWORD,GENDER) VALUES (631375,'yasarku@itu.edu.tr','kursat','yasar','05442609613','efeparola','Male')"""
+        query = """INSERT INTO USERS (ID,EMAIL,NAME,LASTNAME,PHONENUMBER,PASSWORD,GENDER) VALUES (999997,'helvacie@itu.edu.tr','Efe','Helvaci','05442609613','efeparola','Male')"""
         cursor.execute(query)
 
-        query = """INSERT INTO TWEETS (CONTENT, USER_ID) VALUES ('Hello, twitter!', 631378)"""
+        query = """INSERT INTO USERS (ID,EMAIL,NAME,LASTNAME,PHONENUMBER,PASSWORD,GENDER) VALUES (999996,'yasarku@itu.edu.tr','kursat','yasar','05442609613','kursatparola','Male')"""
+        cursor.execute(query)
+
+        query = """INSERT INTO TWEETS (CONTENT, USER_ID) VALUES ('Hello, twitter!', 999997)"""
         cursor.execute(query)
 
         query = """DROP TABLE IF EXISTS NOTIFICATIONS"""
@@ -358,13 +371,13 @@ def initialize_database():
         cursor.execute(query)
         time = datetime.now()
         time = time.replace(microsecond=0)
-        query = """INSERT INTO NOTIFICATIONS (ID, RECEIVERID, FROMID, TWEETID, TYPE, TIME, STATUS) VALUES (1000, 6312, 631212, 3455, 'LIKE', '%s', 'UNSEEN')"""%time
+        query = """INSERT INTO NOTIFICATIONS (ID, RECEIVERID, FROMID, TWEETID, TYPE, TIME, STATUS) VALUES (1000, 999998, 999997, 3455, 'LIKE', '%s', 'UNSEEN')"""%time
         cursor.execute(query)
 
-        query = """INSERT INTO NOTIFICATIONS (ID, RECEIVERID, FROMID, TWEETID, TYPE, TIME, STATUS) VALUES (1001, 1234, 631212, 3406, 'LIKE', '%s', 'UNSEEN')"""%time
+        query = """INSERT INTO NOTIFICATIONS (ID, RECEIVERID, FROMID, TWEETID, TYPE, TIME, STATUS) VALUES (1001, 999997, 999996, 3406, 'LIKE', '%s', 'UNSEEN')"""%time
         cursor.execute(query)
 
-        query = """INSERT INTO NOTIFICATIONS (ID, RECEIVERID, FROMID, TWEETID, TYPE, TIME, STATUS) VALUES (1002, 6312, 631212, 3434, 'LIKE', '%s', 'UNSEEN')"""%time
+        query = """INSERT INTO NOTIFICATIONS (ID, RECEIVERID, FROMID, TWEETID, TYPE, TIME, STATUS) VALUES (1002, 999996, 999997, 3434, 'LIKE', '%s', 'UNSEEN')"""%time
         cursor.execute(query)
 
 
@@ -376,11 +389,11 @@ def initialize_database():
         FRIENDID SERIAL)"""
         cursor.execute(query)
 
-        query = """INSERT INTO FOLLOWERS (ID, FRIENDID) VALUES (631212, 631378)"""
+        query = """INSERT INTO FOLLOWERS (ID, FRIENDID) VALUES (999998, 999997)"""
         cursor.execute(query)
-        query = """INSERT INTO FOLLOWERS (ID, FRIENDID) VALUES (631212, 631375)"""
+        query = """INSERT INTO FOLLOWERS (ID, FRIENDID) VALUES (999997, 999996)"""
         cursor.execute(query)
-        query = """INSERT INTO FOLLOWERS (ID, FRIENDID) VALUES (6314, 6224)"""
+        query = """INSERT INTO FOLLOWERS (ID, FRIENDID) VALUES (999996, 999997)"""
         cursor.execute(query)
 
         query = """DROP TABLE IF EXISTS FOLLOWING"""
@@ -396,11 +409,11 @@ def initialize_database():
             """
         cursor.execute(query)
 
-        query = """INSERT INTO FOLLOWING (ID, FRIENDID,FOLLOWBACK) VALUES (631212, 6213,TRUE)"""
+        query = """INSERT INTO FOLLOWING (ID, FRIENDID,FOLLOWBACK) VALUES (999997, 999996,TRUE)"""
         cursor.execute(query)
 
         connection.commit()
-    return redirect(url_for('home_page'))
+    return redirect(url_for('userops.page_login'))
 
 if __name__ == '__main__':
 

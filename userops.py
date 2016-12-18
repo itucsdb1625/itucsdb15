@@ -151,11 +151,3 @@ def user_select():
     return render_template('page_updateuser.html',users = allusers)
 
 
-@userops.route('/myprofile')
-def profile_page():
-    with dbapi2.connect(app.config['dsn']) as connection:
-        cursor = connection.cursor()
-        cursor.execute("SELECT USERS.NAME, USERS.LASTNAME, TYPE, TIME, STATUS, NOTIFICATIONS.ID FROM NOTIFICATIONS,USERS WHERE (FROMID = USERS.ID)")
-        notifications_all = cursor.fetchall()
-        connection.commit()
-    return render_template('samplecommit4.html', notifications = notifications_all)
