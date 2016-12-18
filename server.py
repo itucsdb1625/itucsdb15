@@ -30,75 +30,24 @@ def create_app():
     from messages import messages
     from userops import userops
     from tweets import tweets
+    from notifications import notifications
 
     app.register_blueprint(messages)
     app.register_blueprint(userops)
     app.register_blueprint(tweets)
+    app.register_blueprint(notifications)
+    
 
     return app
 
-@app.route('/myprofile/deletenotification', methods = ['POST', 'GET'])
-def notification_delete():
+@app.route('/myprofile')
+def profile_page():
     with dbapi2.connect(app.config['dsn']) as connection:
         cursor = connection.cursor()
-        if request.method == 'POST':
-            idtodelete = request.form['idtodelete']
-            query = """DELETE FROM NOTIFICATIONS WHERE ID=%s"""%idtodelete
-            cursor.execute(query)
-
-            cursor.execute("SELECT USERS.NAME, USERS.LASTNAME, TYPE, TIME, STATUS, NOTIFICATIONS.ID FROM NOTIFICATIONS,USERS WHERE (FROMID = USERS.ID)")
-            notifications_all = cursor.fetchall()
-            connection.commit()
-    return redirect(url_for('profile_page', notifications = notifications_all))
-
-@app.route('/myprofile/likenotification', methods = ['POST', 'GET'])
-def notification_like():
-    with dbapi2.connect(app.config['dsn']) as connection:
-        cursor = connection.cursor()
-        if request.method == 'POST':
-            time = datetime.now()
-            time = time.replace(microsecond=0)
-            idtoinsert = request.form['idtoinsert']
-            cursor.execute(query)
-            query = """INSERT INTO NOTIFICATIONS (ID, RECEIVERID, FROMID, TWEETID, TYPE, TIME, STATUS) VALUES (%s, 631212, 631212, %s, 'LIKE', '%s', 'UNSEEN')"""%(random.randint(1,1000000), idtoinsert, time)
-            cursor.execute("""SELECT * FROM TWEETS""")
-            connection.commit()
-
-    allTweets = get_allTweets()
-
-    return render_template('tweetsPage.html', tweets = allTweets)
-
-
-@app.route('/myprofile/retweetnotification', methods = ['POST', 'GET'])
-def notification_retweet():
-    with dbapi2.connect(app.config['dsn']) as connection:
-        cursor = connection.cursor()
-        if request.method == 'POST':
-            time = datetime.now()
-            time = time.replace(microsecond=0)
-            idtoinsert = request.form['idtoinsert']
-            query = """INSERT INTO NOTIFICATIONS (ID, RECEIVERID, FROMID, TWEETID, TYPE, TIME, STATUS) VALUES (%s, 631212, 631212, %s, 'RETWEET', '%s', 'UNSEEN')"""%(random.randint(1,1000000), idtoinsert, time)
-            cursor.execute(query)
-
-            cursor.execute("""SELECT * FROM TWEETS""")
-            connection.commit()
-
-    allTweets = get_allTweets()
-
-    return render_template('tweetsPage.html', tweets = allTweets)
-@app.route('/myprofile/updatenotification', methods = ['POST', 'GET'])
-def notification_update():
-    with dbapi2.connect(app.config['dsn']) as connection:
-        cursor = connection.cursor()
-        if request.method == 'POST':
-            idtoupdate = request.form['idtoupdate']
-            query = """UPDATE NOTIFICATIONS SET STATUS='SEEN' WHERE ID=%s"""%idtoupdate
-            cursor.execute(query)
-
-            cursor.execute("SELECT USERS.NAME, USERS.LASTNAME, TYPE, TIME, STATUS, NOTIFICATIONS.ID FROM NOTIFICATIONS,USERS WHERE (FROMID = USERS.ID)")
-            notifications_all = cursor.fetchall()
-            connection.commit()
-    return redirect(url_for('profile_page', notifications = notifications_all))
+        cursor.execute("SELECT USERS.NAME, USERS.LASTNAME, TYPE, TIME, STATUS, NOTIFICATIONS.ID FROM NOTIFICATIONS,USERS WHERE (FROMID = USERS.ID)")
+        notifications_all = cursor.fetchall()
+        connection.commit()
+    return render_template('samplecommit4.html', notifications = notifications_all)
 
 @app.route('/followers', methods=['GET', 'POST'])
 def followers_page():
@@ -180,14 +129,6 @@ def followers_insert():
 def following_page():
     return render_template('following.html')
 
-@app.route('/myprofile')
-def profile_page():
-    with dbapi2.connect(app.config['dsn']) as connection:
-        cursor = connection.cursor()
-        cursor.execute("SELECT USERS.NAME, USERS.LASTNAME, TYPE, TIME, STATUS, NOTIFICATIONS.ID FROM NOTIFICATIONS,USERS WHERE (FROMID = USERS.ID)")
-        notifications_all = cursor.fetchall()
-        connection.commit()
-    return render_template('samplecommit4.html', notifications = notifications_all)
 
 
 @app.route('/samplecommit5')

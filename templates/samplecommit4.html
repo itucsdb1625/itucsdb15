@@ -21,12 +21,12 @@
 				{{notification[0]}} {{notification[1]}}, {{notification[2]}} your tweet at {{notification[3]}}. This notification is {{notification[4]}}.  			          	
 			</td>
 			<td style="text-align:right">
-			<form action="{{ url_for('notification_update') }}" method = "POST">
+			<form action="{{ url_for('notifications.notification_update') }}" method = "POST">
 			<button type="submit" name="idtoupdate" onclick=testfunction() id={{notification[5]}} value={{notification[5]}}>Seen</button> </form>
 			</td>
 			<td style="text-align:right">
 			
-			<form action="{{ url_for('notification_delete') }}" method = "POST">
+			<form action="{{ url_for('notifications.notification_delete') }}" method = "POST">
 			<button type="submit" name="idtodelete" onclick=testfunction() id={{notification[5]}} value={{notification[5]}}>Delete</button>	
 			</form>
 			</td>

@@ -40,12 +40,12 @@
 			<td width="50%">{{tweet[2]}}</td>
 			<td>{{tweet[3]}}</td>
 			<td>
-			<form action="{{ url_for('notification_like') }}" method = "POST">
+			<form action="{{ url_for('notifications.notification_like') }}" method = "POST">
         	<button type="submit" name="idtoinsert" onclick=testfunction() id={{tweet[4]}} value={{tweet[4]}}>Like</button>
         	</form>
     		</td>
     		<td>
-			<form action="{{ url_for('notification_retweet') }}" method = "POST">
+			<form action="{{ url_for('notifications.notification_retweet') }}" method = "POST">
         	<button type="submit" name="idtoinsert" onclick=testfunction() id={{tweet[4]}} value={{tweet[4]}}>Retweet</button>
         	</form>
     		</td>
