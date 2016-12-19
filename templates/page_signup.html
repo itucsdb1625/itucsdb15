@@ -48,9 +48,9 @@ padding-top: 30px;
       </div>
     </nav>
 	<h2 class = "test" name="headertext">Welcome to Twitter Mini :)</h2>
-	
-	
-	
+
+
+
 <div class="ex4">
 <form action="{{ url_for('userops.page_signup') }}" method = "POST">
 
@@ -75,7 +75,7 @@ Password Again:<br>
  <input type="radio" name="gender" value="male" checked> Male<br>
   <input type="radio" name="gender" value="female"> Female<br>
   <input type="radio" name="gender" value="other"> Other<br><br>
-  
+
 
 <br><br>
 <button type="submit" name="submit" value="register" onclick=testfunction()>Register</button>
@@ -134,7 +134,7 @@ else
 {
 
 var welcomemessage=document.getElementsByName('firstname')[0].value +" " + document.getElementsByName('lastname')[0].value + " is not a valid name/lastname :(" ;
-document.getElementsByName("headertext")[0].innerHTML=welcomemessage;
+//document.getElementsByName("headertext")[0].innerHTML=welcomemessage;
 document.getElementsByName('submit')[0].disabled="true";
 setTimeout(function(){location.reload();},3000);
 }
@@ -148,7 +148,7 @@ else
 {
 
 var welcomemessage=document.getElementsByName('firstname')[0].value +" " + document.getElementsByName('lastname')[0].value + " is not a valid name/lastname :(" ;
-document.getElementsByName("headertext")[0].innerHTML=welcomemessage;
+//document.getElementsByName("headertext")[0].innerHTML=welcomemessage;
 document.getElementsByName('submit')[0].disabled="true";
 setTimeout(function(){location.reload();},3000);
 }
@@ -164,9 +164,3 @@ document.getElementsByName("headertext")[0].innerHTML=welcomemessage;},3000);
 }
 
 </script>
-	
-	
-
-
-
-
