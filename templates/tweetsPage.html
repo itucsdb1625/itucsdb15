@@ -9,19 +9,38 @@
 
 <meta charset="utf-8" />
 	<title>Efe Helvacı</title>
-	<link rel="stylesheet" href="/static/style.css" />
+	<link rel="stylesheet" type="text/css" href="../static/style.css">
+	<style>
+		.submitButton {
+			background-color: #4CAF50; /* Green */
+			border: none;
+			color: white;
+			padding: 15px 32px;
+			text-align: center;
+			text-decoration: none;
+			display: inline-block;
+			font-size: 16px;
+		}
+
+	.tweetInput {
+    height:50px;
+		width:500px;
+	}
+	</style>
+
 </head>
 
 <body>
-	<h2>Page of Efe Helvacı</h2>
+<br><br><br>
+
 
 <form action="{{ url_for('tweets.efe_page') }}" method="POST">
-	<font size="4" color="red">Add tweet</font>
-	<h5>If you are not logged in, your tweets will not be posted.</h5>
-	<h1>Tweet: </h1>
-	<input type="text" name="CONTENT" >
-	<input type="submit" name="add_tweet" value="Tweet it!" />
-
+	<div>
+		<center>
+		<input class="tweetInput" type="text" name="CONTENT">
+		<input class="submitButton "type="submit" name="add_tweet" value="Tweet it!" />
+		</center>
+	</div>
 	<br><br>
 
 	<table width="1000">
@@ -54,11 +73,12 @@
 	</table>
 
 	<br>
-	<input type="submit" name="delete_tweet" value="Delete Selected Tweet"><br>
-	<input type="submit" name="update_tweet" value="Update Selected Tweet">
+	<input class="submitButton" type="submit" name="delete_tweet" value="Delete Selected Tweet">
+	<input class="submitButton" type="submit" name="update_tweet" value="Update Selected Tweet">
 </form>
 
 </body>
+
 
 </html>
 
