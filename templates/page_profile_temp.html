@@ -9,30 +9,40 @@
 <meta charset="utf-8" />
 	<title>Sample Commit Page</title>
 	<link rel="stylesheet" href="/static/style.css" />
+
+	<style>
+		.redirectHomePageButton {
+			background-color: #4CAF50; /* Green */
+			border: none;
+			color: white;
+			padding: 15px 32px;
+			text-align: center;
+			text-decoration: none;
+			display: inline-block;
+			font-size: 16px;
+		}
+	</style>
 </head>
 
 <body>
-	<h2 name="headertext">Your Profile Page:</h2>
-	
-	
+	<center>
+	<img src="http://www.socmedsean.com/wp-content/uploads/2011/11/dont-be-a-twitter-noob-with-an-egg-avatar.jpg" alt="Profile Picture" style="width:150px;height:150px;">
+
 	{% for user in users %}
-	
+
 	<div class="container">
-  <h2>You:</h2>
     <label><b>E-Mail</b>  {{user[0]}}  </label><br>
     <label><b>Name</b> {{user[1]}}  </label>
     <label><b>   </b>   {{user[2]}}</label><br>
-    
-
   </div>
-	
-	TODO: Tweets and Followers Will Come here.
-	TODO: Profile Page will be fixed.
-	
+
+	<br>
+	<button onclick="location.href = 'http://itucsdb1625.mybluemix.net/tweetsPage';" class="redirectHomePageButton">Go to home page and start tweeting!</button>
+	</center>
 		{% endfor %}
-		
-</body>	
-	
+
+</body>
+
 
 <script>
 
@@ -46,6 +56,6 @@ document.getElementsByName('id')[0].disabled=false
 }
 
 </script>
-	
-	
+
+
 {% endblock %}
